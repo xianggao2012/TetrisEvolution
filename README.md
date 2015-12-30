@@ -1,2 +1,0 @@
-# TetrisEvolutions
-# Xiang Gao
