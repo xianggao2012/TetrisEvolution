@@ -1,0 +1,16 @@
+<!--?xml version ="1.0" encoding ="UTF8" standalone="yes" ?-->
+<!--?xml-stylesheet type="text/xsl" href="yxfqust.xsl" ?-->
+<!--以下是一个学生名单-->
+<student_list>
+    <student>
+        <stu_num>2012050808</stu_num>
+        <stu_name>crystal</stu_name>
+        <stu_class>T74</stu_class>
+        <stu_class>T74</stu_class>
+    </student>
+    <student>
+        <stu_num> 2012050809</stu_num>
+        <stu_name>goodmao</stu_name>
+        <stu_class>T77</stu_class>
+    </student>
+</student_list>
