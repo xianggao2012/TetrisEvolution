@@ -54,31 +54,29 @@ bool HelloWorld::init()
     /////////////////////////////
     // 3. add your codes below...
     //获取文件路径
-    const char* file_path = FileUtils::getInstance()->fullPathForFilename("default.xml").c_str();
-    log("external file path = %s",file_path);
-    cout<<"filepath:"<<file_path<<endl;
-    
+    string file_path = FileUtils::getInstance()->fullPathForFilename("default_scene.xml");
+    cout<<"external file path ="<<file_path;
     XMLDocument* myDocment = new tinyxml2::XMLDocument();
     //加载文件
-    myDocment->LoadFile(file_path);
+    myDocment->LoadFile(file_path.c_str());
     
     tinyxml2::XMLElement* rootElement = myDocment->RootElement();
     
     
     XMLElement* studentElement = rootElement->FirstChildElement();
     
-//    while (studentElement) {
-//        
-//        
-//        XMLElement* element = studentElement->FirstChildElement();
-//        while (element) {
-//            log("信息 : %s",element->GetText());
-//            element = element->NextSiblingElement();
-//            
-//        }
-//        studentElement = studentElement->NextSiblingElement();
-//        
-//    }
+    while (studentElement) {
+        
+        
+        XMLElement* element = studentElement->FirstChildElement();
+        while (element) {
+            log("信息 : %s",element->GetText());
+            element = element->NextSiblingElement();
+            
+        }
+        studentElement = studentElement->NextSiblingElement();
+        
+    }
     
     
     // add a label shows "Hello World"
