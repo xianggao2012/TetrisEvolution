@@ -1,5 +1,5 @@
-#ifndef  _INFO_SCENE_H_
-#define  _INFO_SCENE_H_
+#ifndef  _CONFIG_FACTORY_H_
+#define  _CONFIG_FACTORY_H_
 
 #include "cocos-ext.h"
 #include "tinyxml2/tinyxml2.h"
@@ -12,12 +12,12 @@ using namespace std;
 
 The reason for implement as private inheritance is to hide some interface call by Director.
 */
-class  InfoScene
+class  ConfigFactory
 {
 public:
-    InfoScene();
-    virtual ~InfoScene();
+    ConfigFactory();
+    virtual ~ConfigFactory();
 };
 
-#endif // _INFO_SCENE_H_
+#endif // _CONFIG_FACTORY_H_
 
