@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "LayerGameClassic.h"
 #include "TEHeader.h"
 
 USING_NS_CC;
@@ -20,6 +20,18 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 
+    //initialize singletons: ConfigFactory
+//  Use static instead of dynamic loading layer content for now
+//    ConfigFactory::getInstance()->LoadScene();
+
+
+    // create menu screen according to config.
+    // load menu_scene & create with loaded content
+// tyr to create HelloWorld with config
+    
+    auto scene = LayerGameClassic::createScene();
+
+
     // turn on display FPS
     director->setDisplayStats(true);
 
@@ -27,7 +39,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+//    auto scene = HelloWorld::createScene();
 
     // run
     director->runWithScene(scene);
