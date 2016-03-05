@@ -10,7 +10,7 @@
 #define TEHeader_h
 
 #include "ConfigFactory.h"      // singleton object managing all xml configs
-
+ 
 // Description
 // File
 #define CONF_DEFAULT_XML "default_scene.xml"
