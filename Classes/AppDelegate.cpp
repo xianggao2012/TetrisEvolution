@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
 #include "LayerGameClassic.h"
+#include "LayerMenu.h"
 #include "TEHeader.h"
 
 USING_NS_CC;
@@ -29,7 +30,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // load menu_scene & create with loaded content
 // tyr to create HelloWorld with config
     
-    auto scene = LayerGameClassic::createScene();
+    auto scene = LayerMenu::createScene();
 
 
     // turn on display FPS

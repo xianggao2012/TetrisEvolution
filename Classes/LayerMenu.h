@@ -15,6 +15,10 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     
+    void imageMenuCallback(cocos2d::CCObject* pSender);
+    
+    void labelMenuCallback(cocos2d::CCObject* pSender);
+    
     // implement the "static create()" method manually
     CREATE_FUNC(LayerMenu);
 };

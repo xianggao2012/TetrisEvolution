@@ -1,5 +1,5 @@
 #include "LayerGameClassic.h"
-
+#include "TEHeader.h"
 USING_NS_CC;
 
 Scene* LayerGameClassic::createScene()
@@ -50,7 +50,20 @@ bool LayerGameClassic::init()
 
     /////////////////////////////
     // 3. add your codes below...
+    
+        auto size = Director::getInstance()->getWinSize();
+    
+        auto labelText = LabelTTF::create("Go back", "Arial",30);
+        auto labelItem = MenuItemLabel::create(labelText,
+                                               CC_CALLBACK_1(LayerGameClassic::labelMenuCallback, this));
+    //    //创建一个菜单,并设置位置
+        auto labelMenu = Menu::create(labelItem,NULL);
+        labelMenu->setPosition(Vec2(size.width/2,size.height/2+50));
+    //    //将文本菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
+        addChild(labelMenu,2);
 
+    
+    
     // add a label shows "Hello World"
     // create and initialize a label
     
@@ -75,6 +88,13 @@ bool LayerGameClassic::init()
     return true;
 }
 
+void LayerGameClassic::labelMenuCallback(Ref* pSender)
+{
+    auto scene = LayerMenu::createScene();
+    Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
+    //释放
+    //scene->release();
+}
 
 void LayerGameClassic::menuCloseCallback(Ref* pSender)
 {
