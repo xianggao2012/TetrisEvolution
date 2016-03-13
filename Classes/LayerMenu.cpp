@@ -1,5 +1,4 @@
 #include "LayerMenu.h"
-#include "TEHeader.h"
 USING_NS_CC;
 
 Scene* LayerMenu::createScene()

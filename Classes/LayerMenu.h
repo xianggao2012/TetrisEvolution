@@ -2,6 +2,7 @@
 #define __Layer_MENU_H__
 
 #include "cocos2d.h"
+#include "LayerGameClassic.h"
 
 class LayerMenu : public cocos2d::Layer
 {

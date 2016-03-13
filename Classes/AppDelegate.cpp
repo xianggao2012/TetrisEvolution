@@ -1,7 +1,5 @@
 #include "AppDelegate.h"
-#include "LayerGameClassic.h"
 #include "LayerMenu.h"
-#include "TEHeader.h"
 
 USING_NS_CC;
 
@@ -19,6 +17,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if(!glview) {
         glview = GLView::create("My Game");
         director->setOpenGLView(glview);
+    }
+
+    Size screenSize = glview->getFrameSize();
+    if (screenSize.width > 768) {
+        FileUtils::getInstance()->setSearchPaths({"hd"});
+        director->setContentScaleFactor(1);
+    } else {
+        FileUtils::getInstance()->setSearchPaths({"sd"});
+        director->setContentScaleFactor(1);
     }
 
     //initialize singletons: ConfigFactory
