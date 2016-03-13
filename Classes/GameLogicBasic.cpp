@@ -142,31 +142,33 @@ bool GameLogicBasic::MoveRight()
 bool GameLogicBasic::Rotate()
 {
     int hmax = 0, h = POOL_HEIGHT, w = POOL_WIDTH;
+    int tx, ty, ax, ay; //temp, availability
 
-    int px, py;
     for(auto block : mover)
     {
-        px = block[0];
-        py = block[1];
-        hmax = (hmax >= py ? hmax : py);
-        h = (h <= py ? h : py);
-        w = (w <= px ? w : px);
+        hmax = (hmax >= block[1] ? hmax : block[1]);
+        h = (h <= block[1] ? h : block[1]);
+        w = (w <= block[0] ? w : block[0]);
     }
     hmax = hmax - h;
-    
-    // nx=hmax - y,ny=x
-    int x, y;
+
+    // check rotate availability
     for(auto block : mover)
     {
-        px = block[0];
-        py = block[1];
-        x = hmax - (py - h) + w;
-        y = (px - w) + h;
-        
-        px = x;
-        py = y;
-        block[0] = px;
-        block[1] = py;
+        tx = block[0];
+        ty = block[1];
+        ax = hmax - (ty - h) + w;
+        ay = (tx - w) + h;
+        if(ax <=0 || ax >= (POOL_WIDTH - 1) || ay <= 0 || ay >= (POOL_HEIGHT - 1) || pool[ax][ay]) return false;
+    }
+    
+    // nx=hmax - y,ny=x
+    for(auto block : mover)
+    {
+        tx = block[0];
+        ty = block[1];
+        block[0] = hmax - (ty - h) + w;
+        block[1] = (tx - w) + h;
     }
     
     return true;
