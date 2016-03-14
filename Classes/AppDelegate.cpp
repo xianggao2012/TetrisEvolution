@@ -27,18 +27,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
         FileUtils::getInstance()->setSearchPaths({"sd"});
         director->setContentScaleFactor(1);
     }
-
-    //initialize singletons: ConfigFactory
-//  Use static instead of dynamic loading layer content for now
-//    ConfigFactory::getInstance()->LoadScene();
-
-
-    // create menu screen according to config.
-    // load menu_scene & create with loaded content
-// tyr to create HelloWorld with config
     
-    auto scene = LayerMenu::createScene();
-
+    //initialize singletons: ConfigFactory
+    //ConfigFactory::getInstance()->LoadScene();
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -47,7 +38,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-//    auto scene = HelloWorld::createScene();
+    auto scene = LayerMenu::createScene();
 
     // run
     director->runWithScene(scene);

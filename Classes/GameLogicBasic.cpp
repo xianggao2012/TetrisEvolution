@@ -20,7 +20,7 @@ int blockSet[BLOCK_TYPES][BLOCK_COMP][2] =
 
 bool GameLogicBasic::Initialize()
 {
-    srand (time(NULL));
+    srand(time(NULL));
     int n = rand() % BLOCK_TYPES;
 
     // 1. empty pool
@@ -162,7 +162,7 @@ bool GameLogicBasic::Rotate()
         if(ax <=0 || ax >= (POOL_WIDTH - 1) || ay <= 0 || ay >= (POOL_HEIGHT - 1) || pool[ax][ay]) return false;
     }
     
-    // nx=hmax - y,ny=x
+    // newx=hmax - y,newy=x
     for(auto block : mover)
     {
         tx = block[0];
