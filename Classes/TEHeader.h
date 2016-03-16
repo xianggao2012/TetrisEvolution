@@ -34,5 +34,27 @@
 #define DROP_INTERVAL 0.3
 //#define GEN_INTERVAL 1
 
+// Layer elements
+// LayerGameClassic
+#define LGC_BG "Background"
+#define LGC_BG_IMG "image"
+#define LGC_BG_X "px"
+#define LGC_BG_Y "py"
+#define LGC_LB "LeftButton"
+#define LGC_LB_IMG_DEFAULT "imageDefault"
+#define LGC_LB_IMG_CLICKED "imageClicked"
+#define LGC_LB_X "px"
+#define LGC_LB_Y "py"
+#define LGC_RB "RightButton"
+#define LGC_RB_IMG_DEFAULT "imageDefault"
+#define LGC_RB_IMG_CLICKED "imageClicked"
+#define LGC_RB_X "px"
+#define LGC_RB_Y "py"
+#define LGC_RTB "RotateButton"
+#define LGC_RTB_IMG_DEFAULT "imageDefault"
+#define LGC_RTB_IMG_CLICKED "imageClicked"
+#define LGC_RTB_X "px"
+#define LGC_RTB_Y "py"
+
 
 #endif /* TEHeader_h */
