@@ -1,14 +1,17 @@
 <!--?xml version ="1.0" encoding ="UTF8" standalone="yes" ?-->
 <!--?xml-stylesheet type="text/xsl" href="yxfqust.xsl" ?-->
 <element_list>
-    <element>
-        <type>scene</type>
-        <name>menu</name>
-        <background>crystal</background>
-    </element>
-    <element>
-        <type>scene</type>
-        <name>classic</name>
-        <background>crystal</background>
-    </element>
+    <LayerGameClassic>
+        <background>
+            <image>court.png</image>
+            <px>0.5</px>
+            <py>0.5</py>
+        </background>
+        <Left>
+            <stayed>StayedBlock.png</stayed>
+            <active>ActiveBlock.png</active>
+            <px>100.0</px>
+            <py>500.0</py>
+        </Left>
+    </LayerGameClassic>
 </element_list>

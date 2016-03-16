@@ -5,6 +5,7 @@
 
 #include "TEHeader.h"
 #include <iostream>
+#include<unordered_map>
 using namespace std;
 
 /**
@@ -25,7 +26,8 @@ public:
     // loading methods
     bool LoadScene();
     bool LoadStage();
-
+    unordered_map<string, unordered_map<string, string>> LoadLayer(string);
+    
     string a[10];
 
     // get methods
@@ -33,7 +35,7 @@ public:
 private:
     ConfigFactory();
 
-    // map object to match the scene name and scene config object
+    //map<string, map<string, string>> config;
     
 };
 

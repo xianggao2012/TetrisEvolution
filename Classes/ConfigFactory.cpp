@@ -28,6 +28,51 @@ ConfigFactory* ConfigFactory::getInstance()
     }
     return p_ConfigFactory;
 }
+
+unordered_map<string, unordered_map<string, string>> ConfigFactory::LoadLayer(string layername)
+{
+    unordered_map<string, unordered_map<string, string>> map_config;
+    unordered_map<string, string> map_attri;
+    string str_attri;
+    string file_path = FileUtils::getInstance()->fullPathForFilename(CONF_DEFAULT_XML);
+    XMLDocument* myDocment = new tinyxml2::XMLDocument();
+    myDocment->LoadFile(file_path.c_str());
+    
+    tinyxml2::XMLElement* rootElement = myDocment->RootElement();
+    XMLElement* Element = rootElement->FirstChildElement();
+    
+    while (Element) { // rootElement; Element-child of root; element-child of Element
+        
+        if(strcmp(Element->Name(),layername.c_str()) == 0)   // locate the element with layername
+        {
+            XMLElement* element = Element->FirstChildElement(); // element - background; leftbutton
+            
+            while(element)
+            {
+                str_attri = element->Name();                        // e.g background; leftbutton
+                
+                XMLElement* ele = element->FirstChildElement();
+                while(ele)
+                {
+                    string a, b;
+                    a=ele->Name();
+                    b=ele->GetText();
+                    map_attri[a] = b;
+                    ele = ele->NextSiblingElement();
+                }
+                
+                map_config[str_attri] = map_attri;
+                element = element->NextSiblingElement();
+            }
+            
+            return map_config;
+        }
+        Element = Element->NextSiblingElement();
+    }
+    
+    return map_config;
+}
+
 bool ConfigFactory::LoadScene()
 {
     string file_path = FileUtils::getInstance()->fullPathForFilename(CONF_DEFAULT_XML);

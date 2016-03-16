@@ -1,6 +1,7 @@
 #include "LayerGameClassic.h"
 #include "LayerMenu.h"
 #include "TEHeader.h"
+#include "ConfigFactory.h"
 
 //#include "ui/CocosGUI.h"
 //#include "extensions/cocos-ext.h"
@@ -55,7 +56,9 @@ bool LayerGameClassic::init()
 
     /////////////////////////////
     // 3. add your codes below...
-    
+    unordered_map<string, unordered_map<string, string>> config;
+    config = ConfigFactory::getInstance()->LoadLayer("LayerGameClassic");
+
     // 3.1 return back to menu
     auto size = Director::getInstance()->getWinSize();
     
@@ -74,11 +77,12 @@ bool LayerGameClassic::init()
 
     // 3.3 background
     _screenSize = cocos2d::Director::getInstance()->getWinSize();
-    //cocos2d::Sprite *court = cocos2d::Sprite::create("court.png");
-    auto court = Sprite::create("court.png");
+//    auto court = Sprite::create("court.png");
+    
+    auto court = Sprite::create(config["background"]["image"]);
     court->setPosition(cocos2d::Point{
-        _screenSize.width * 0.5f,
-        _screenSize.height * 0.5f
+        _screenSize.width * stof(config["background"]["px"]),
+        _screenSize.height * stof(config["background"]["py"])
     });
     addChild(court);
 
@@ -112,12 +116,12 @@ bool LayerGameClassic::init()
     // 3.5 buttons
     //ControlButton *lblBtn = ControlButton::create("zhouyunxuan", "fonts/PaintBoy.ttf", 30);
     ControlButton *lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(100.0, 500.0));
-    auto backgroundButton = Scale9Sprite::create("ActiveBlock.png");    // no event
-    auto backgroundHighlightedButton = Scale9Sprite::create("StayedBlock.png"); // clicked
+    lblBtn->setPosition(Vec2(stof(config["Left"]["px"]), stof(config["Left"]["py"])));
+    auto backgroundButton = Scale9Sprite::create(config["Left"]["active"]);    // no event
+    auto backgroundHighlightedButton = Scale9Sprite::create(config["Left"]["stayed"]); // clicked
     lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create("ActiveBlock.png")->getContentSize());
+    lblBtn->setPreferredSize(Sprite::create(config["Left"]["active"])->getContentSize());
     //绑定点击事件
     lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveLeft),
                                                 Control::EventType::TOUCH_DOWN);
