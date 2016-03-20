@@ -72,9 +72,9 @@ bool LayerMenu::init()
     labelMenu->setPosition(Vec2(size.width/2,size.height/2+50));
     //将文本菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
     addChild(labelMenu,2);
+   
     
-    
-//    
+//
 //    // add a label shows "Hello World"
 //    // create and initialize a label
 //    

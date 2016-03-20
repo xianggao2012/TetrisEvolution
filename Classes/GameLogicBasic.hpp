@@ -21,18 +21,19 @@ private:
     
     int candidates[CANDIDATES][BLOCK_COMP][2];
     
+public:
     void Generate();
     void MergeMover();
     
-public:
 
     bool pool[POOL_WIDTH][POOL_HEIGHT];
     int mover[BLOCK_COMP][2];
     
     bool Initialize();
-    void DropDown();
+    bool DropDown();
     bool MoveLeft();
     bool MoveRight();
+    bool MoveDown();
     bool Rotate();
     
 };

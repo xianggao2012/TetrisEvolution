@@ -61,7 +61,7 @@ bool GameLogicBasic::Initialize()
     return true;
 }
 
-void GameLogicBasic::DropDown()
+bool GameLogicBasic::DropDown()
 {
     // if can't drop anymore, merge it to the pool and generate another
     bool touched = false;
@@ -71,12 +71,14 @@ void GameLogicBasic::DropDown()
         if(block[1] == 0 || pool[block[0]][block[1] - 1]) touched = true;
     }
     
-    if(touched)
-    {
-        MergeMover();
-        Generate();
-    }
+    if(touched) return touched;
+//    {
+//        MergeMover();
+//        Generate();
+//    }
     else for(auto block : mover) block[1] -= 1;
+    
+    return touched;
 }
 
 void GameLogicBasic::MergeMover()
@@ -172,4 +174,15 @@ bool GameLogicBasic::Rotate()
     }
     
     return true;
+}
+
+bool GameLogicBasic::MoveDown()
+{
+    bool touched = false;
+    while(!touched)
+    {
+        touched = DropDown();
+    }
+    
+    return touched;
 }

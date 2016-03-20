@@ -55,6 +55,11 @@
 #define LGC_RTB_IMG_CLICKED "imageClicked"
 #define LGC_RTB_X "px"
 #define LGC_RTB_Y "py"
+#define LGC_DB "DownButton"
+#define LGC_DB_IMG_DEFAULT "imageDefault"
+#define LGC_DB_IMG_CLICKED "imageClicked"
+#define LGC_DB_X "px"
+#define LGC_DB_Y "py"
 
 
 #endif /* TEHeader_h */

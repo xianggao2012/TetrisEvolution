@@ -6,8 +6,8 @@
 #include "cocos2d.h"
 #include "GameLogicBasic.hpp"
 #include "GameSprite.h"
-
-
+#include <vector>
+using namespace std;
 #include "cocos-ext.h"
 using namespace cocos2d::extension;
 
@@ -46,11 +46,15 @@ public:
 //    void GenerateMover();
 //        bool isFullRow(int r);
 //        void MoveRowTo(int from, int dest);
-    void Update(float dt);
+    void update(float dt);
     void DropDown(float dt);
     void MoveLeft(Ref *sender,Control::EventType controlEvent);
     void MoveRight(Ref *sender,Control::EventType controlEvent);
     void Rotate(Ref *sender,Control::EventType controlEvent);
+    void MoveDown(Ref *sender,Control::EventType controlEvent);
+    
+    vector<cocos2d::Vec2> effect_MoveDown;
+    void EffectMoveDown(float dt);
 };
 
 #endif // __LAYER_GAME_CLASSIC_H__

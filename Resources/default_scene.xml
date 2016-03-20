@@ -25,5 +25,11 @@
             <px>1400.0</px>
             <py>700.0</py>
         </RotateButton>
+        <DownButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>100.0</px>
+            <py>700.0</py>
+        </DownButton>
     </LayerGameClassic>
 </element_list>
