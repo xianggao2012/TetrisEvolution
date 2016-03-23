@@ -14,13 +14,16 @@
 #include <stdio.h>
 #include "cocos2d.h"
 
+#include<vector>
+using namespace std;
 
 class GameLogicBasic
 {
 private:
     
     int candidates[CANDIDATES][BLOCK_COMP][2];
-    
+    bool rowEmpty[POOL_HEIGHT];
+    void MoveRowTo(int from, int to);
 public:
     void Generate();
     void MergeMover();
@@ -35,6 +38,9 @@ public:
     bool MoveRight();
     bool MoveDown();
     bool Rotate();
+    bool EliminateRow();
+    void ShrinkRow();
+    vector<int> getEliminatedRow();
     
 };
 

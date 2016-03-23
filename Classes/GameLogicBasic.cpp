@@ -7,6 +7,7 @@
 //
 
 #include "GameLogicBasic.hpp"
+
 int blockSet[BLOCK_TYPES][BLOCK_COMP][2] =
 {
     {{0,0},{1,0},{1,1},{1,2}},  // 7
@@ -58,12 +59,14 @@ bool GameLogicBasic::Initialize()
         mover[i][1] = y - mover[i][1];
     }
 
+    // 5. row set to not full
+    for(auto row : rowEmpty) row = false;
+    
     return true;
 }
 
 bool GameLogicBasic::DropDown()
 {
-    // if can't drop anymore, merge it to the pool and generate another
     bool touched = false;
     
     for(auto block : mover){
@@ -72,10 +75,6 @@ bool GameLogicBasic::DropDown()
     }
     
     if(touched) return touched;
-//    {
-//        MergeMover();
-//        Generate();
-//    }
     else for(auto block : mover) block[1] -= 1;
     
     return touched;
@@ -185,4 +184,69 @@ bool GameLogicBasic::MoveDown()
     }
     
     return touched;
+}
+
+bool GameLogicBasic::EliminateRow()
+{
+    bool foundRowFull = false;
+    
+    bool rowFull;
+    for(int j = 0; j < POOL_HEIGHT; j ++)
+    {
+        rowFull = true;
+        for(int i = 0; i < POOL_WIDTH; i ++)
+        {
+            if(!pool[i][j]) rowFull = false;
+        }
+        if(rowFull)
+        {
+            foundRowFull = true;
+            for(int i = 0; i < POOL_WIDTH; i ++) pool[i][j] = false;
+            rowEmpty[j] = true;
+        }
+    }
+    
+    return foundRowFull;
+}
+
+void GameLogicBasic::ShrinkRow()
+{
+    int last = 0, cur = 0;
+    while(cur < POOL_HEIGHT)
+    {
+        if(cur == last && rowEmpty[cur] == false)
+        {
+            last ++;
+            cur ++;
+        }
+        else if(last == cur && rowEmpty[cur] == true)
+        {
+            cur ++;
+        }
+        else if(rowEmpty[cur] == false)
+        {
+            MoveRowTo(cur, last);
+            rowEmpty[last] = false;
+            rowEmpty[cur] = true;
+            last ++;
+            cur ++;
+        }
+        else cur++;
+    }
+}
+
+void GameLogicBasic::MoveRowTo(int from, int to)
+{
+    for(int i = 0; i < POOL_WIDTH; i ++) pool[i][to] = pool[i][from];
+}
+
+vector<int> GameLogicBasic::getEliminatedRow()
+{
+    vector<int> ret;
+    for(int i = 0; i < POOL_HEIGHT; i ++)
+    {
+        if(rowEmpty[i]) ret.push_back(i);
+    }
+    
+    return ret;
 }

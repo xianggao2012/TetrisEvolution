@@ -177,7 +177,6 @@ bool LayerGameClassic::init()
 
 void LayerGameClassic::update(float dt) {
 
-    CCLOG("%f",dt);
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         std::vector<GameSprite*> v;
@@ -198,8 +197,7 @@ void LayerGameClassic::DropDown(float dt)
 {
     if(game->DropDown())
     {
-        game->MergeMover();
-        game->Generate();
+        MergeEliminateGenerate();
     }
 }
 
@@ -230,10 +228,10 @@ void LayerGameClassic::MoveDown(Ref *sender,Control::EventType controlEvent)
         effect_MoveDown.push_back(pool[block[0]][block[1]]->getPosition());
     }
     
+    // effect
     scheduleOnce(schedule_selector(LayerGameClassic::EffectMoveDown), 0);
     
-    game->MergeMover();
-    game->Generate();
+    MergeEliminateGenerate();
 }
 
 void LayerGameClassic::labelMenuCallback(Ref* pSender)
@@ -246,96 +244,47 @@ void LayerGameClassic::labelMenuCallback(Ref* pSender)
 
 void LayerGameClassic::EffectMoveDown(float dt)
 {
-    ///----------
-    CCPoint mysize = CCDirector::sharedDirector()->getVisibleSize();
-    
-    
-    CCParticleSystemQuad* quad = CCParticleSystemQuad::create();
-    this->addChild(quad,1,1);
-    
-    
-    //纹理图片
-    quad->setTexture( CCTextureCache::sharedTextureCache()->addImage("HelloWorld.png") );
-    
-    
-    //混合模式
-    ccBlendFunc cbl = { GL_SRC_ALPHA , GL_ONE};
-    quad->setBlendFunc(cbl);
-    
-    
-    /********************/
-    /*     粒子属性     */
-    /********************/
-    
-    //粒子生命，单位：秒
-    quad->setLife(0.2);
-    quad->setLifeVar(0);
-    
-    //大小，-1表示和初始大小一致
-    quad->setStartSize(100);
-    quad->setStartSizeVar(5);
-    quad->setEndSize(200);
-    quad->setEndSizeVar(0);
-    
-    //颜色，ccc4f：取值0~1
-    quad->setStartColor( ccc4f(192/255.0, 63/255.0, 63/255.0, 63/255.0) );
-    quad->setStartColorVar(  ccc4f(192/255.0, 63/255.0, 63/255.0, 63/255.0));
-    quad->setEndColor( ccc4f(0, 0, 0, 0) );
-    quad->setEndColorVar( ccc4f(0, 0, 0, 0) );
-    
-    //旋转角度
-    quad->setStartSpin(0);
-    quad->setStartSpinVar(60);
-    quad->setEndSpin(180);
-    quad->setEndSpinVar(30);
-    
-    //发射角度
-    quad->setAngle(180);
-    quad->setAngleVar(30);
-    
-    
-    /********************/
-    /*  发射器子属性    */
-    /********************/
-    
-    //最大粒子个数
-    quad->setTotalParticles(500);
-    
-    //粒子发射器持续时间，-1为永久
-    quad->setDuration(0.2);
-    
-    //发射速率
-    quad->setEmissionRate( quad->getTotalParticles() /  quad->getDuration());
-    
-    //发射器位置
-    quad->setPosition( effect_MoveDown[0]);
-    quad->setPosVar( ccp(0,0) );
-    
+    for(auto effect : effect_MoveDown)
+    {
+        ParticleFire* quad = ParticleFire::create();
+        quad->setPosition(effect);
+        quad->setDuration(0.5);
+        this->addChild(quad,1,1);
+    }
     effect_MoveDown.clear();
-    
-    //重力模式
-    quad->setEmitterMode(kCCParticleModeGravity);
-    
-    //粒子位置模式
-    quad->setPositionType(kCCPositionTypeFree);
-    
-    //粒子速度
-    quad->setSpeed(0);
-    quad->setSpeedVar(0);
-    
-    //重力加速度
-    quad->setGravity( ccp(0, 5) );
-    
-    //径向加速度
-    quad->setRadialAccel(0);
-    quad->setRadialAccelVar(100);
-    
-    //切向加速度
-    quad->setTangentialAccel(0);
-    quad->setTangentialAccelVar(0);
-    ///-----------
 }
 
+void LayerGameClassic::EffectRowClear(float dt)
+{
+    for(auto row : effect_Eliminate)
+    {
+        for(int i = 0; i < POOL_WIDTH; i ++)
+        {
+            ParticleFire* quad = ParticleFire::create();
+            quad->setPosition(pool[i][row]->getPosition());
+            quad->setDuration(0.5);
+            this->addChild(quad,1,1);
+        }
+    }
+}
+
+
+void LayerGameClassic::RowClear()
+{
+    game->EliminateRow();
+}
+
+void LayerGameClassic::MergeEliminateGenerate()
+{
+    game->MergeMover();
+    if(game->EliminateRow())
+    {
+        effect_Eliminate = game->getEliminatedRow();
+        scheduleOnce(schedule_selector(LayerGameClassic::EffectRowClear), 0);
+        game->ShrinkRow();
+    }
+    game->Generate();
+}
 void LayerGameClassic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)

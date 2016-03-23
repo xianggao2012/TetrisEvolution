@@ -52,9 +52,13 @@ public:
     void MoveRight(Ref *sender,Control::EventType controlEvent);
     void Rotate(Ref *sender,Control::EventType controlEvent);
     void MoveDown(Ref *sender,Control::EventType controlEvent);
+    void RowClear();
+    void MergeEliminateGenerate();
     
     vector<cocos2d::Vec2> effect_MoveDown;
+    vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
+    void EffectRowClear(float dt);
 };
 
 #endif // __LAYER_GAME_CLASSIC_H__
