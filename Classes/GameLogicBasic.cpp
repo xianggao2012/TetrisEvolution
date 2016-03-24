@@ -8,7 +8,7 @@
 
 #include "GameLogicBasic.hpp"
 
-int blockSet[BLOCK_TYPES][BLOCK_COMP][2] =
+static const int blockSet[BLOCK_TYPES][BLOCK_COMP][2] =
 {
     {{0,0},{1,0},{1,1},{1,2}},  // 7
     {{0,0},{1,0},{0,1},{0,2}},
@@ -31,7 +31,7 @@ bool GameLogicBasic::Initialize()
     }
     // 2. mover
     n = rand() % BLOCK_TYPES;
-    CCLOG("n:%i",n);
+
     for(int i = 0; i < BLOCK_COMP; i ++)
     {
         mover[i][0] = blockSet[n][i][0];
@@ -42,7 +42,7 @@ bool GameLogicBasic::Initialize()
     for(int i = 0; i < CANDIDATES; i ++)
     {
         n = rand() % BLOCK_TYPES;
-        CCLOG("n:%i",n);
+
         for(int j = 0; j < BLOCK_COMP; j ++)
         {
             candidates[i][j][0] = blockSet[n][j][0];
@@ -60,7 +60,12 @@ bool GameLogicBasic::Initialize()
     }
 
     // 5. row set to not full
-    for(auto row : rowEmpty) row = false;
+    for(int i = 0; i < POOL_HEIGHT; i ++) rowEmpty[i] = false;
+    
+    // test:
+    for(int i = 0; i < POOL_WIDTH; i ++) pool[i][0] = true;
+    pool[4][0] = false;
+    pool[1][1] = true;
     
     return true;
 }
@@ -112,13 +117,11 @@ void GameLogicBasic::Generate()
     // 4. add mover to the pool; real position, not shape
     int x = POOL_WIDTH / 2 - 1;
     int y = POOL_HEIGHT - 1;
-    CCLOG("new mover:");
+
     for(int i = 0; i < BLOCK_COMP; i ++)
     {
         mover[i][0] = x + mover[i][0];
         mover[i][1] = y - mover[i][1];
-        
-        CCLOG("(%i, %i)",mover[i][0], mover[i][1]);
     }
 }
 
@@ -233,6 +236,7 @@ void GameLogicBasic::ShrinkRow()
         }
         else cur++;
     }
+    for(int i = 0; i < POOL_HEIGHT; i ++) rowEmpty[i] = false;
 }
 
 void GameLogicBasic::MoveRowTo(int from, int to)

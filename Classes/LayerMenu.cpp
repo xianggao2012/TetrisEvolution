@@ -102,8 +102,8 @@ bool LayerMenu::init()
 void LayerMenu::imageMenuCallback(Ref* pSender)
 {
     //在输出台打印一句话
-    cocos2d::log("ImageMenu");
-    CCLOG("ImageMenu");
+//    cocos2d::log("ImageMenu");
+//    CCLOG("ImageMenu");
 }
 void LayerMenu::labelMenuCallback(Ref* pSender)
 {

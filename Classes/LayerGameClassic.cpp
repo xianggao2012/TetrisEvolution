@@ -279,6 +279,7 @@ void LayerGameClassic::MergeEliminateGenerate()
     game->MergeMover();
     if(game->EliminateRow())
     {
+        effect_Eliminate.clear();
         effect_Eliminate = game->getEliminatedRow();
         scheduleOnce(schedule_selector(LayerGameClassic::EffectRowClear), 0);
         game->ShrinkRow();

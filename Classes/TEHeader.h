@@ -31,7 +31,7 @@
 #define BLOCK_TYPES 7
 #define BLOCK_COMP 4
 #define CANDIDATES 3
-#define DROP_INTERVAL 0.3
+#define DROP_INTERVAL 3
 //#define GEN_INTERVAL 1
 
 // Layer elements
