@@ -59,6 +59,8 @@ public:
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
     void EffectRowClear(float dt);
+    
+    cocos2d::ParticleSystem *quad[POOL_WIDTH];
 };
 
 #endif // __LAYER_GAME_CLASSIC_H__

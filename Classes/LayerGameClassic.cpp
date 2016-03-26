@@ -172,6 +172,15 @@ bool LayerGameClassic::init()
     // 3.7 schedule: UPDATE
     schedule( schedule_selector(LayerGameClassic::DropDown), DROP_INTERVAL);
     
+    //
+    for(int i = 0; i < POOL_WIDTH; i ++)
+    {
+        quad[i] = ParticleSystemQuad::create("fire.plist");
+        quad[i]->setDuration(0.5);
+        addChild(quad[i]);
+    }
+    
+    CCLOG("initialize : %i", quad[0]->getReferenceCount());
     return true;
 }
 
@@ -249,6 +258,7 @@ void LayerGameClassic::EffectMoveDown(float dt)
         ParticleFire* quad = ParticleFire::create();
         quad->setPosition(effect);
         quad->setDuration(0.5);
+        quad->setAutoRemoveOnFinish(true);
         this->addChild(quad,1,1);
     }
     effect_MoveDown.clear();
@@ -260,10 +270,9 @@ void LayerGameClassic::EffectRowClear(float dt)
     {
         for(int i = 0; i < POOL_WIDTH; i ++)
         {
-            ParticleSystem *quad = ParticleSystemQuad::create("fire.plist");
-            quad->setPosition(pool[i][row]->getPosition());
-            quad->setDuration(0.5);
-            this->addChild(quad,1,1);
+            CCLOG("EffectRowClear: %i", quad[i]->getReferenceCount());
+            quad[i]->resetSystem();
+            quad[i]->setPosition(pool[i][row]->getPosition());
         }
     }
 }
