@@ -260,7 +260,7 @@ void LayerGameClassic::EffectRowClear(float dt)
     {
         for(int i = 0; i < POOL_WIDTH; i ++)
         {
-            ParticleFire* quad = ParticleFire::create();
+            ParticleSystem *quad = ParticleSystemQuad::create("fire.plist");
             quad->setPosition(pool[i][row]->getPosition());
             quad->setDuration(0.5);
             this->addChild(quad,1,1);
