@@ -176,11 +176,9 @@ bool LayerGameClassic::init()
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         quad[i] = ParticleSystemQuad::create("fire.plist");
-        CCLOG("count 1:%i", quad[i]->getReferenceCount());
         quad[i]->setDuration(0.5);
         addChild(quad[i]);
     }
-    CCLOG("count 2:%i", quad[0]->getReferenceCount());
     
     return true;
 }

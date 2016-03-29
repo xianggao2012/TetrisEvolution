@@ -1,7 +1,7 @@
 
 
-#ifndef __LAYER_GAME_CLASSIC_H__
-#define __LAYER_GAME_CLASSIC_H__
+#ifndef __LAYER_GAME_BASIC_H__
+#define __LAYER_GAME_BASIC_H__
 
 #include "cocos2d.h"
 #include "GameLogicBasic.hpp"
@@ -11,7 +11,7 @@ using namespace std;
 #include "cocos-ext.h"
 using namespace cocos2d::extension;
 
-class LayerGameClassic : public cocos2d::Layer
+class LayerGameBasic : public cocos2d::Layer
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -24,37 +24,27 @@ public:
     void menuCloseCallback(cocos2d::Ref* pSender);
     
     void labelMenuCallback(Ref* pSender);
-
-    GameLogicBasic *game;
     
     // implement the "static create()" method manually
-    CREATE_FUNC(LayerGameClassic);
-
+    CREATE_FUNC(LayerGameBasic);
 
     // Added code
-
-    cocos2d::Size _screenSize;
-    //std::vector<std::vector<GameSprite*> > pool;
+    GameLogicBasic *game;
+    
     GameSprite *pool[POOL_WIDTH][POOL_HEIGHT];
     GameSprite *left, *right, *rotate;
     GameSprite *mover[BLOCK_COMP];
-//    void AddMoverToPool();
-//    void AddActiveMover();
-//    bool CheckTouched();
-//    bool CheckFull();
-//    void Eliminate();
-//    void GenerateMover();
-//        bool isFullRow(int r);
-//        void MoveRowTo(int from, int dest);
+    
     void update(float dt);
     void DropDown(float dt);
     void MoveLeft(Ref *sender,Control::EventType controlEvent);
     void MoveRight(Ref *sender,Control::EventType controlEvent);
-    void Rotate(Ref *sender,Control::EventType controlEvent);
     void MoveDown(Ref *sender,Control::EventType controlEvent);
+    void Rotate(Ref *sender,Control::EventType controlEvent);
     void RowClear();
     void MergeEliminateGenerate();
     
+    //Particle effects
     vector<cocos2d::Vec2> effect_MoveDown;
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
@@ -63,4 +53,4 @@ public:
     cocos2d::ParticleSystem *quad[POOL_WIDTH];
 };
 
-#endif // __LAYER_GAME_CLASSIC_H__
+#endif // __LAYER_GAME_BASIC_H__

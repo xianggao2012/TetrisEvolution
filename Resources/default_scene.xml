@@ -32,4 +32,35 @@
             <py>700.0</py>
         </DownButton>
     </LayerGameClassic>
+    <LayerGameDig>
+        <Background>
+            <image>court.png</image>
+            <px>0.5</px>
+            <py>0.5</py>
+        </Background>
+        <LeftButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>100.0</px>
+            <py>500.0</py>
+        </LeftButton>
+        <RightButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1400.0</px>
+            <py>500.0</py>
+        </RightButton>
+        <RotateButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1400.0</px>
+            <py>700.0</py>
+        </RotateButton>
+        <DownButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>100.0</px>
+            <py>700.0</py>
+        </DownButton>
+    </LayerGameDig>
 </element_list>

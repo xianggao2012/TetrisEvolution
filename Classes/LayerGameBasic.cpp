@@ -1,4 +1,4 @@
-#include "LayerGameClassic.h"
+#include "LayerGameBasic.h"
 #include "LayerMenu.h"
 #include "TEHeader.h"
 #include "ConfigFactory.h"
@@ -8,13 +8,13 @@
 
 USING_NS_CC;
 
-Scene* LayerGameClassic::createScene()
+Scene* LayerGameBasic::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = LayerGameClassic::create();
+    auto layer = LayerGameBasic::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -24,7 +24,7 @@ Scene* LayerGameClassic::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool LayerGameClassic::init()
+bool LayerGameBasic::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -44,7 +44,7 @@ bool LayerGameClassic::init()
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
-                                           CC_CALLBACK_1(LayerGameClassic::menuCloseCallback, this));
+                                           CC_CALLBACK_1(LayerGameBasic::menuCloseCallback, this));
     
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
@@ -64,7 +64,7 @@ bool LayerGameClassic::init()
     
     auto labelText = LabelTTF::create("Go back", "Arial",30);
     auto labelItem = MenuItemLabel::create(labelText,
-                                               CC_CALLBACK_1(LayerGameClassic::labelMenuCallback, this));
+                                               CC_CALLBACK_1(LayerGameBasic::labelMenuCallback, this));
     //创建一个菜单,并设置位置
     auto labelMenu = Menu::create(labelItem,NULL);
     labelMenu->setPosition(Vec2(100, 100));
@@ -76,7 +76,7 @@ bool LayerGameClassic::init()
     game->Initialize();
 
     // 3.3 background
-    _screenSize = cocos2d::Director::getInstance()->getWinSize();
+    cocos2d::Size _screenSize = cocos2d::Director::getInstance()->getWinSize();
 //    auto court = Sprite::create("court.png");
     
     auto court = Sprite::create(config[LGC_BG][LGC_BG_IMG]);
@@ -123,7 +123,7 @@ bool LayerGameClassic::init()
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
     lblBtn->setPreferredSize(Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT])->getContentSize());
     //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveLeft),
+    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveLeft),
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn);
 
@@ -136,7 +136,7 @@ bool LayerGameClassic::init()
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
     lblBtn->setPreferredSize(Sprite::create(config[LGC_RB][LGC_RB_IMG_DEFAULT])->getContentSize());
     //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveRight),
+    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveRight),
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn);
 
@@ -149,7 +149,7 @@ bool LayerGameClassic::init()
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
     lblBtn->setPreferredSize(Sprite::create(config[LGC_RTB][LGC_RTB_IMG_DEFAULT])->getContentSize());
     //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::Rotate),
+    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::Rotate),
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn);
     
@@ -162,7 +162,7 @@ bool LayerGameClassic::init()
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
     lblBtn->setPreferredSize(Sprite::create(config[LGC_DB][LGC_DB_IMG_DEFAULT])->getContentSize());
     //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveDown),
+    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveDown),
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn);
     
@@ -170,7 +170,7 @@ bool LayerGameClassic::init()
     scheduleUpdate();  // first priority before other schedulers which makes change
     
     // 3.7 schedule: UPDATE
-    schedule( schedule_selector(LayerGameClassic::DropDown), DROP_INTERVAL);
+    schedule( schedule_selector(LayerGameBasic::DropDown), DROP_INTERVAL);
     
     //
     for(int i = 0; i < POOL_WIDTH; i ++)
@@ -185,7 +185,7 @@ bool LayerGameClassic::init()
     return true;
 }
 
-void LayerGameClassic::update(float dt) {
+void LayerGameBasic::update(float dt) {
 
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
@@ -203,7 +203,7 @@ void LayerGameClassic::update(float dt) {
     }
 }
 
-void LayerGameClassic::DropDown(float dt)
+void LayerGameBasic::DropDown(float dt)
 {
     if(game->DropDown())
     {
@@ -211,22 +211,22 @@ void LayerGameClassic::DropDown(float dt)
     }
 }
 
-void LayerGameClassic::MoveLeft(Ref *sender,Control::EventType controlEvent)
+void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
 {
     game->MoveLeft();
 }
 
-void LayerGameClassic::MoveRight(Ref *sender,Control::EventType controlEvent)
+void LayerGameBasic::MoveRight(Ref *sender,Control::EventType controlEvent)
 {
     game->MoveRight();
 }
 
-void LayerGameClassic::Rotate(Ref *sender,Control::EventType controlEvent)
+void LayerGameBasic::Rotate(Ref *sender,Control::EventType controlEvent)
 {
     game->Rotate();
 }
 
-void LayerGameClassic::MoveDown(Ref *sender,Control::EventType controlEvent)
+void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
 {
     bool touched = false;
     while(!touched)
@@ -239,12 +239,12 @@ void LayerGameClassic::MoveDown(Ref *sender,Control::EventType controlEvent)
     }
     
     // effect
-    scheduleOnce(schedule_selector(LayerGameClassic::EffectMoveDown), 0);
+    scheduleOnce(schedule_selector(LayerGameBasic::EffectMoveDown), 0);
     
     MergeEliminateGenerate();
 }
 
-void LayerGameClassic::labelMenuCallback(Ref* pSender)
+void LayerGameBasic::labelMenuCallback(Ref* pSender)
 {
     auto scene = LayerMenu::createScene();
     Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
@@ -252,7 +252,7 @@ void LayerGameClassic::labelMenuCallback(Ref* pSender)
     //scene->release();
 }
 
-void LayerGameClassic::EffectMoveDown(float dt)
+void LayerGameBasic::EffectMoveDown(float dt)
 {
     for(auto effect : effect_MoveDown)
     {
@@ -265,7 +265,7 @@ void LayerGameClassic::EffectMoveDown(float dt)
     effect_MoveDown.clear();
 }
 
-void LayerGameClassic::EffectRowClear(float dt)
+void LayerGameBasic::EffectRowClear(float dt)
 {
     for(auto row : effect_Eliminate)
     {
@@ -278,24 +278,24 @@ void LayerGameClassic::EffectRowClear(float dt)
 }
 
 
-void LayerGameClassic::RowClear()
+void LayerGameBasic::RowClear()
 {
     game->EliminateRow();
 }
 
-void LayerGameClassic::MergeEliminateGenerate()
+void LayerGameBasic::MergeEliminateGenerate()
 {
     game->MergeMover();
     if(game->EliminateRow())
     {
         effect_Eliminate.clear();
         effect_Eliminate = game->getEliminatedRow();
-        scheduleOnce(schedule_selector(LayerGameClassic::EffectRowClear), 0);
+        scheduleOnce(schedule_selector(LayerGameBasic::EffectRowClear), 0);
         game->ShrinkRow();
     }
     game->Generate();
 }
-void LayerGameClassic::menuCloseCallback(Ref* pSender)
+void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
