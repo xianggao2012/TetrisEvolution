@@ -17,7 +17,7 @@ Scene* LayerGameBasic::createScene()
     auto layer = LayerGameBasic::create();
 
     // add layer as a child to scene
-    scene->addChild(layer);
+    scene->addChild(layer, 2);
 
     // return the scene
     return scene;
@@ -52,12 +52,10 @@ bool LayerGameBasic::init()
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
     menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    this->addChild(menu, 2);
 
     /////////////////////////////
     // 3. add your codes below...
-    unordered_map<string, unordered_map<string, string>> config;
-    config = ConfigFactory::getInstance()->LoadLayer("LayerGameClassic");
 
     // 3.1 return back to menu
     auto size = Director::getInstance()->getWinSize();
@@ -75,17 +73,6 @@ bool LayerGameBasic::init()
     game = new GameLogicBasic();
     game->Initialize();
 
-    // 3.3 background
-    cocos2d::Size _screenSize = cocos2d::Director::getInstance()->getWinSize();
-//    auto court = Sprite::create("court.png");
-    
-    auto court = Sprite::create(config[LGC_BG][LGC_BG_IMG]);
-    court->setPosition(cocos2d::Point{
-        _screenSize.width * stof(config["Background"]["px"]),
-        _screenSize.height * stof(config["Background"]["py"])
-    });
-    addChild(court);
-
     // 3.4 pool
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
@@ -101,7 +88,7 @@ bool LayerGameBasic::init()
             pool[i][j]->setPoolPositionY(j);
             pool[i][j]->isSettled = false;
             pool[i][j]->setVisible(false);
-            addChild(pool[i][j]);
+            addChild(pool[i][j], 2);
         }
     }
 
@@ -110,62 +97,8 @@ bool LayerGameBasic::init()
     {
         mover[i] = GameSprite::gameSpriteWithFile("ActiveBlock.png");
         mover[i]->setVisible(true);
-        addChild(mover[i]);
+        addChild(mover[i], 2);
     }
-
-    // 3.5 buttons
-    //ControlButton *lblBtn = ControlButton::create("zhouyunxuan", "fonts/PaintBoy.ttf", 30);
-    ControlButton *lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_LB][LGC_LB_X]), stof(config[LGC_LB][LGC_LB_Y])));
-    auto backgroundButton = Scale9Sprite::create(config[LGC_LB][LGC_LB_IMG_CLICKED]);    // no event
-    auto backgroundHighlightedButton = Scale9Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveLeft),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-
-
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_RB][LGC_RB_X]), stof(config[LGC_RB][LGC_RB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_RB][LGC_RB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_RB][LGC_RB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_RB][LGC_RB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveRight),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-
-
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_RTB][LGC_RTB_X]), stof(config[LGC_RTB][LGC_RTB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_RTB][LGC_RTB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_RTB][LGC_RTB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_RTB][LGC_RTB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::Rotate),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-    
-    
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_DB][LGC_DB_X]), stof(config[LGC_DB][LGC_DB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_DB][LGC_DB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_DB][LGC_DB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_DB][LGC_DB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameBasic::MoveDown),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-    
     // 3.6 schedule: UPDATE
     scheduleUpdate();  // first priority before other schedulers which makes change
     
@@ -176,11 +109,9 @@ bool LayerGameBasic::init()
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         quad[i] = ParticleSystemQuad::create("fire.plist");
-        CCLOG("count 1:%i", quad[i]->getReferenceCount());
         quad[i]->setDuration(0.5);
-        addChild(quad[i]);
+        addChild(quad[i], 2);
     }
-    CCLOG("count 2:%i", quad[0]->getReferenceCount());
     
     return true;
 }
@@ -260,7 +191,7 @@ void LayerGameBasic::EffectMoveDown(float dt)
         quad->setPosition(effect);
         quad->setDuration(0.5);
         quad->setAutoRemoveOnFinish(true);
-        this->addChild(quad,1,1);
+        this->addChild(quad,2,1);
     }
     effect_MoveDown.clear();
 }
