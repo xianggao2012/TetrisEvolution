@@ -118,19 +118,20 @@ bool LayerGameBasic::init()
 
 void LayerGameBasic::update(float dt) {
 
+    CCLOG("update");
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         std::vector<GameSprite*> v;
         for(int j = 0; j < POOL_HEIGHT; j ++)
         {
-            if(game->pool[i][j]) pool[i][j]->setVisible(true);
+            if(game->pool.status[i][j] != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
             else pool[i][j]->setVisible(false);
         }
     }
     
     for(int i = 0; i < BLOCK_COMP; i ++ )
     {
-        mover[i]->setPosition((pool[game->mover[i][0]][game->mover[i][1]])->getPosition());
+        mover[i]->setPosition((pool[game->mover.positions[i].first][game->mover.positions[i].second])->getPosition());
     }
 }
 
@@ -164,9 +165,9 @@ void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
     {
         touched = game->DropDown();
     }
-    for(auto block : game->mover)
+    for(auto block : game->mover.positions)
     {
-        effect_MoveDown.push_back(pool[block[0]][block[1]]->getPosition());
+        effect_MoveDown.push_back(pool[block.first][block.second]->getPosition());
     }
     
     // effect
