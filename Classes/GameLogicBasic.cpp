@@ -106,7 +106,12 @@ void GameLogicBasic::Generate()
     {
         mover.shapes[i][0] = candidates[0].shapes[i][0];
         mover.shapes[i][1] = candidates[0].shapes[i][1];
+        mover.status[i] = candidates[0].status[i];
     }
+    mover.len = candidates[0].len;
+    mover.type = candidates[0].type;
+    
+    
     // 2. adjust remained candidates
     for(int i = 0; i < CANDIDATES - 1; i ++)
     {
@@ -114,8 +119,12 @@ void GameLogicBasic::Generate()
         {
             candidates[i].shapes[j][0] = candidates[i + 1].shapes[j][0];
             candidates[i].shapes[j][1] = candidates[i + 1].shapes[j][1];
+            candidates[i].status[j] = candidates[i + 1].status[j];
         }
+        candidates[i].len = candidates[i + 1].len;
+        candidates[i].type = candidates[i + 1].type;
     }
+    
     // 3. randomize a new candidate
     int _random = rand() % BLOCK_TYPES;
     for(int i = 0; i < BLOCK_COMP; i ++)
@@ -268,4 +277,37 @@ vector<int> GameLogicBasic::getEliminatedRow()
     }
     
     return ret;
+}
+
+bool GameLogicBasic::DigDown(int n)
+{
+    if(pool.depth == 0) return false;
+    
+    int delta = pool.depth >= n ? n : pool.depth;
+    pool.depth = pool.depth == delta ? 0 : (pool.depth - delta);
+    
+    for(int i = POOL_HEIGHT - delta - 1; i >= 0; i--)
+    {
+        MoveRowTo(i, delta);
+    }
+    
+    GenerateRow(delta);
+    
+    return true;
+}
+
+bool GameLogicBasic::GenerateRow(int n)
+{
+    int _random;
+    for(int i = 0; i < n; i ++)
+    {
+        for(int j = 0; j < POOL_WIDTH; j ++)
+        {
+            _random = rand() % 2;
+            if(_random) pool.status[j][i] = POOL_BLO_SETTLED;
+            else pool.status[j][i] = POOL_BLO_EMPTY;
+        }
+    }
+    
+    return true;
 }

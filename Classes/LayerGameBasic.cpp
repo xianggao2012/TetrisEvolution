@@ -118,7 +118,6 @@ bool LayerGameBasic::init()
 
 void LayerGameBasic::update(float dt) {
 
-    CCLOG("update");
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         std::vector<GameSprite*> v;

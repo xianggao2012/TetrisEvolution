@@ -24,6 +24,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(LayerGameDig);
 
+    void MergeEliminateGenerate();
 };
 
 #endif // __LAYER_GAME_DIG_H__

@@ -48,10 +48,6 @@ public:
     void Generate();
     void MergeMover();
     
-
-//    bool pool[POOL_WIDTH][POOL_HEIGHT];
-//    int shape[BLOCK_COMP][2];
-    
     bool Initialize();
     bool DropDown();
     bool MoveLeft();
@@ -61,7 +57,8 @@ public:
     bool EliminateRow();
     void ShrinkRow();
     vector<int> getEliminatedRow();
-    
+    bool DigDown(int);
+    bool GenerateRow(int);
 };
 
 #endif /* GameLogicBasic_hpp */

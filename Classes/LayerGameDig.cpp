@@ -3,9 +3,6 @@
 #include "TEHeader.h"
 #include "ConfigFactory.h"
 
-//#include "ui/CocosGUI.h"
-//#include "extensions/cocos-ext.h"
-
 USING_NS_CC;
 
 Scene* LayerGameDig::createScene()
@@ -102,7 +99,23 @@ bool LayerGameDig::init()
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn, 2);
     
-  
+    game->pool.depth = 3;
     
     return true;
+}
+
+void LayerGameDig::MergeEliminateGenerate()
+{
+    game->MergeMover();
+    bool eliminate = game->EliminateRow();
+    if(eliminate)
+    {
+        effect_Eliminate.clear();
+        effect_Eliminate = game->getEliminatedRow();
+        scheduleOnce(schedule_selector(LayerGameBasic::EffectRowClear), 0);
+        game->ShrinkRow();
+    }
+    game->Generate();
+    
+    if(eliminate) game->DigDown(effect_Eliminate.size());
 }

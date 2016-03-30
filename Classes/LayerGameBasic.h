@@ -42,7 +42,7 @@ public:
     void MoveDown(Ref *sender,Control::EventType controlEvent);
     void Rotate(Ref *sender,Control::EventType controlEvent);
     void RowClear();
-    void MergeEliminateGenerate();
+    virtual void MergeEliminateGenerate();
     
     //Particle effects
     vector<cocos2d::Vec2> effect_MoveDown;
