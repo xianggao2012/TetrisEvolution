@@ -10,6 +10,7 @@
 using namespace std;
 #include "cocos-ext.h"
 using namespace cocos2d::extension;
+USING_NS_CC;
 
 class LayerGameBasic : public cocos2d::Layer
 {
@@ -43,6 +44,8 @@ public:
     void Rotate(Ref *sender,Control::EventType controlEvent);
     void RowClear();
     virtual void MergeEliminateGenerate();
+    
+    Vec2 getMoverPosition(int);
     
     //Particle effects
     vector<cocos2d::Vec2> effect_MoveDown;

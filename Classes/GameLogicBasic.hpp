@@ -45,20 +45,30 @@ public:
     bool rowEmpty[POOL_HEIGHT];
     void MoveRowTo(int from, int to);
 public:
-    void Generate();
-    void MergeMover();
     
+    // basic
     bool Initialize();
+    
+    // game operations; basic behaviors taken, commonly used
     bool DropDown();
     bool MoveLeft();
     bool MoveRight();
     bool MoveDown();
     bool Rotate();
+    
+    // game operations; detail controll
+    void Generate();
+    void MergeMover();
     bool EliminateRow();
-    void ShrinkRow();
-    vector<int> getEliminatedRow();
     bool DigDown(int);
     bool GenerateRow(int);
+    void ShrinkRow();
+    
+    // customer support, get info
+    vector<int> getEliminatedRow();
+    pair<int, int> getMoverPosition(int);    // each block in the mover
+    int getPoolStatus(int, int);
+    int getMoverLength();
 };
 
 #endif /* GameLogicBasic_hpp */

@@ -311,3 +311,22 @@ bool GameLogicBasic::GenerateRow(int n)
     
     return true;
 }
+
+int GameLogicBasic::getPoolStatus(int x, int y)
+{
+    return pool.status[x][y];
+}
+pair<int, int> GameLogicBasic::getMoverPosition(int n)
+{
+    pair<int, int> ret;
+    ret.first = mover.positions[n].first;
+    ret.second = mover.positions[n].second;
+    
+    return ret;
+}
+
+
+int GameLogicBasic::getMoverLength()
+{
+    return mover.len;
+}

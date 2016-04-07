@@ -123,6 +123,7 @@ bool LayerGameClassic::init()
     lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
     lblBtn->setPreferredSize(Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT])->getContentSize());
     //绑定点击事件
+    
     lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveLeft),
                                                 Control::EventType::TOUCH_DOWN);
     addChild(lblBtn);

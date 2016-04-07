@@ -120,17 +120,16 @@ void LayerGameBasic::update(float dt) {
 
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
-        std::vector<GameSprite*> v;
         for(int j = 0; j < POOL_HEIGHT; j ++)
         {
-            if(game->pool.status[i][j] != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
+            if(game->getPoolStatus(i, j) != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
             else pool[i][j]->setVisible(false);
         }
     }
     
     for(int i = 0; i < BLOCK_COMP; i ++ )
     {
-        mover[i]->setPosition((pool[game->mover.positions[i].first][game->mover.positions[i].second])->getPosition());
+        mover[i]->setPosition(getMoverPosition(i));
     }
 }
 
@@ -164,11 +163,13 @@ void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
     {
         touched = game->DropDown();
     }
-    for(auto block : game->mover.positions)
-    {
-        effect_MoveDown.push_back(pool[block.first][block.second]->getPosition());
-    }
     
+    for(int i = 0; i < game->getMoverLength(); i ++)
+    {
+        
+        effect_MoveDown.push_back(getMoverPosition(i));
+    }
+
     // effect
     scheduleOnce(schedule_selector(LayerGameBasic::EffectMoveDown), 0);
     
@@ -208,7 +209,6 @@ void LayerGameBasic::EffectRowClear(float dt)
     }
 }
 
-
 void LayerGameBasic::RowClear()
 {
     game->EliminateRow();
@@ -226,6 +226,15 @@ void LayerGameBasic::MergeEliminateGenerate()
     }
     game->Generate();
 }
+
+
+Vec2 LayerGameBasic::getMoverPosition(int n)
+{
+    pair<int, int> pos = game->getMoverPosition(n);
+    return pool[pos.first][pos.second]->getPosition();
+}
+
+
 void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
