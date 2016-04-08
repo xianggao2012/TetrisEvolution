@@ -79,7 +79,7 @@ bool LayerGameClassic::init()
     _screenSize = cocos2d::Director::getInstance()->getWinSize();
 //    auto court = Sprite::create("court.png");
     
-    auto court = Sprite::create(config[LGC_BG][LGC_BG_IMG]);
+    auto court = Sprite::create(config[LGB_BG][LGB_BG_IMG]);
     court->setPosition(cocos2d::Point{
         _screenSize.width * stof(config["Background"]["px"]),
         _screenSize.height * stof(config["Background"]["py"])
@@ -114,58 +114,6 @@ bool LayerGameClassic::init()
     }
 
     // 3.5 buttons
-    //ControlButton *lblBtn = ControlButton::create("zhouyunxuan", "fonts/PaintBoy.ttf", 30);
-    ControlButton *lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_LB][LGC_LB_X]), stof(config[LGC_LB][LGC_LB_Y])));
-    auto backgroundButton = Scale9Sprite::create(config[LGC_LB][LGC_LB_IMG_CLICKED]);    // no event
-    auto backgroundHighlightedButton = Scale9Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_LB][LGC_LB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveLeft),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-
-
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_RB][LGC_RB_X]), stof(config[LGC_RB][LGC_RB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_RB][LGC_RB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_RB][LGC_RB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_RB][LGC_RB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveRight),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-
-
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_RTB][LGC_RTB_X]), stof(config[LGC_RTB][LGC_RTB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_RTB][LGC_RTB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_RTB][LGC_RTB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_RTB][LGC_RTB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::Rotate),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
-    
-    
-    lblBtn = ControlButton::create();
-    lblBtn->setPosition(Vec2(stof(config[LGC_DB][LGC_DB_X]), stof(config[LGC_DB][LGC_DB_Y])));
-    backgroundButton = Scale9Sprite::create(config[LGC_DB][LGC_DB_IMG_CLICKED]);    // no event
-    backgroundHighlightedButton = Scale9Sprite::create(config[LGC_DB][LGC_DB_IMG_DEFAULT]); // clicked
-    lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
-    lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
-    lblBtn->setPreferredSize(Sprite::create(config[LGC_DB][LGC_DB_IMG_DEFAULT])->getContentSize());
-    //绑定点击事件
-    lblBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(LayerGameClassic::MoveDown),
-                                                Control::EventType::TOUCH_DOWN);
-    addChild(lblBtn);
     
     // 3.6 schedule: UPDATE
     scheduleUpdate();  // first priority before other schedulers which makes change

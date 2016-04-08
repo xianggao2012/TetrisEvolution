@@ -91,7 +91,22 @@ bool LayerGameBasic::init()
             addChild(pool[i][j], 2);
         }
     }
-
+    
+     // 3. add your codes below...
+    unordered_map<string, unordered_map<string, string>> config;
+    config = ConfigFactory::getInstance()->LoadLayer("LayerGameBasic");
+    
+    // 3.3 background
+    cocos2d::Size _screenSize = cocos2d::Director::getInstance()->getWinSize();
+    //    auto court = Sprite::create("court.png");
+    
+    auto court = Sprite::create(config[LGB_BG][LGB_BG_IMG]);
+    court->setPosition(cocos2d::Point{
+        _screenSize.width * stof(config["Background"]["px"]),
+        _screenSize.height * stof(config["Background"]["py"])
+    });
+    addChild(court, 1);
+    
     // 3.4 mover
     for(int i = 0; i < BLOCK_COMP; i ++)
     {
@@ -99,6 +114,35 @@ bool LayerGameBasic::init()
         mover[i]->setVisible(true);
         addChild(mover[i], 2);
     }
+    
+    // 3.5 buttons
+    typedef void (LayerGameBasic::*FnPtr)(Ref *sender,Control::EventType controlEvent);
+    
+    std::map<std::string, FnPtr> myMap;
+    myMap["LeftButton"] = &LayerGameBasic::MoveLeft;
+    myMap["RightButton"] = &LayerGameBasic::MoveRight;
+    myMap["RotateButton"] = &LayerGameBasic::Rotate;
+    myMap["DownButton"] = &LayerGameBasic::MoveDown;
+    
+    for(unordered_map<string, unordered_map<string, string> >::iterator iter = config.begin(); iter != config.end(); iter++)
+    {
+        if(iter->second["type"] != "2") continue;
+        
+        ControlButton *lblBtn = ControlButton::create();
+        lblBtn->setPosition(Vec2(stof(iter->second["px"]), stof(iter->second["py"])));
+        auto backgroundButton = Scale9Sprite::create(iter->second["imageDefault"]);    // no event
+        auto backgroundHighlightedButton = Scale9Sprite::create(iter->second["imageClicked"]); // clicked
+        
+        lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
+        lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
+        lblBtn->setPreferredSize(Sprite::create(iter->second["imageDefault"])->getContentSize());
+        
+        lblBtn->addTargetWithActionForControlEvents(this, static_cast<cocos2d::extension::Control::Handler>(myMap[iter->first]),
+                                                    Control::EventType::TOUCH_DOWN);
+        
+        addChild(lblBtn, 2);
+    }
+    
     // 3.6 schedule: UPDATE
     scheduleUpdate();  // first priority before other schedulers which makes change
     
