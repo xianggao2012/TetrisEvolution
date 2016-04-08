@@ -35,6 +35,7 @@ bool LayerGameDig::init()
     return true;
 }
 
+// overwrite parent class. add logic for dig check
 void LayerGameDig::MergeEliminateGenerate()
 {
     game->MergeMover();

@@ -121,8 +121,9 @@ bool LayerGameBasic::init()
     std::map<std::string, FnPtr> myMap;
     myMap["LeftButton"] = &LayerGameBasic::MoveLeft;
     myMap["RightButton"] = &LayerGameBasic::MoveRight;
-    myMap["RotateButton"] = &LayerGameBasic::Rotate;
     myMap["DownButton"] = &LayerGameBasic::MoveDown;
+    myMap["RotateButton"] = &LayerGameBasic::Rotate;
+    myMap["BottomButton"] = &LayerGameBasic::MoveToBottom;
     
     for(unordered_map<string, unordered_map<string, string> >::iterator iter = config.begin(); iter != config.end(); iter++)
     {
@@ -132,14 +133,14 @@ bool LayerGameBasic::init()
         lblBtn->setPosition(Vec2(stof(iter->second["px"]), stof(iter->second["py"])));
         auto backgroundButton = Scale9Sprite::create(iter->second["imageDefault"]);    // no event
         auto backgroundHighlightedButton = Scale9Sprite::create(iter->second["imageClicked"]); // clicked
-        
+
         lblBtn->setBackgroundSpriteForState(backgroundButton, Control::State::NORMAL);
         lblBtn->setBackgroundSpriteForState(backgroundHighlightedButton, Control::State::HIGH_LIGHTED);
         lblBtn->setPreferredSize(Sprite::create(iter->second["imageDefault"])->getContentSize());
         
         lblBtn->addTargetWithActionForControlEvents(this, static_cast<cocos2d::extension::Control::Handler>(myMap[iter->first]),
                                                     Control::EventType::TOUCH_DOWN);
-        
+       
         addChild(lblBtn, 2);
     }
     
@@ -195,12 +196,20 @@ void LayerGameBasic::MoveRight(Ref *sender,Control::EventType controlEvent)
     game->MoveRight();
 }
 
+void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
+{
+    if(game->DropDown())
+    {
+        MergeEliminateGenerate();
+    }
+}
+
 void LayerGameBasic::Rotate(Ref *sender,Control::EventType controlEvent)
 {
     game->Rotate();
 }
 
-void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
+void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
 {
     bool touched = false;
     while(!touched)

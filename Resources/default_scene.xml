@@ -4,37 +4,44 @@
     <LayerGameBasic>
         <Background>
             <image>court.png</image>
-            <gx>0.5</px>
+            <px>0.5</px>
             <py>0.5</py>
             <type>1</type>
         </Background>
         <LeftButton>
             <imageDefault>StayedBlock.png</imageDefault>
             <imageClicked>ActiveBlock.png</imageClicked>
-            <px>100.0</px>
-            <py>500.0</py>
+            <px>1300.0</px>
+            <py>700.0</py>
             <type>2</type>
         </LeftButton>
         <RightButton>
             <imageDefault>StayedBlock.png</imageDefault>
             <imageClicked>ActiveBlock.png</imageClicked>
-            <px>1400.0</px>
-            <py>500.0</py>
-            <type>2</type>
-        </RightButton>
-        <RotateButton>
-            <imageDefault>StayedBlock.png</imageDefault>
-            <imageClicked>ActiveBlock.png</imageClicked>
-            <px>1400.0</px>
+            <px>1500.0</px>
             <py>700.0</py>
             <type>2</type>
-        </RotateButton>
+        </RightButton>
         <DownButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1350.0</px>
+            <py>500.0</py>
+            <type>2</type>
+        </DownButton>
+        <RotateButton>
             <imageDefault>StayedBlock.png</imageDefault>
             <imageClicked>ActiveBlock.png</imageClicked>
             <px>100.0</px>
             <py>700.0</py>
             <type>2</type>
-        </DownButton>
+        </RotateButton>
+        <BottomButton>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>100.0</px>
+            <py>500.0</py>
+            <type>2</type>
+        </BottomButton>
     </LayerGameBasic>
 </element_list>

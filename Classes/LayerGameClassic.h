@@ -51,7 +51,7 @@ public:
     void MoveLeft(Ref *sender,Control::EventType controlEvent);
     void MoveRight(Ref *sender,Control::EventType controlEvent);
     void Rotate(Ref *sender,Control::EventType controlEvent);
-    void MoveDown(Ref *sender,Control::EventType controlEvent);
+    void MoveToBottom(Ref *sender,Control::EventType controlEvent);
     void RowClear();
     void MergeEliminateGenerate();
     

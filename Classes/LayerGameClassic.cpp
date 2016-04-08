@@ -175,7 +175,7 @@ void LayerGameClassic::Rotate(Ref *sender,Control::EventType controlEvent)
     game->Rotate();
 }
 
-void LayerGameClassic::MoveDown(Ref *sender,Control::EventType controlEvent)
+void LayerGameClassic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
 {
     bool touched = false;
     while(!touched)

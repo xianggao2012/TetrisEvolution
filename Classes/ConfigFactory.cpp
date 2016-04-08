@@ -31,6 +31,7 @@ ConfigFactory* ConfigFactory::getInstance()
 
 unordered_map<string, unordered_map<string, string>> ConfigFactory::LoadLayer(string layername)
 {
+    std::cout<<"layername:"<<layername<<endl;
     unordered_map<string, unordered_map<string, string>> map_config;
     unordered_map<string, string> map_attri;
     string str_attri;
