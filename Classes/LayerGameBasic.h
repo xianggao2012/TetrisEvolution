@@ -62,6 +62,8 @@ protected:
     GameSprite *mover[BLOCK_COMP];
     int b_isolation = 0;
     bool isIsolated();
+    
+    GameSprite *t_row[POOL_WIDTH];
     /*
      ** game operations; detail controll
      */
@@ -86,10 +88,15 @@ public:
     void PostTouchDig(float dt);
     void PostTouchGenerate(float dt);
     
-
+    void setRowPointer(int to, int from);
+    void setRowPointerSwitch(int from);
+    void setRowPointerTemp(int from);
+    
 protected:
     cocos2d::ParticleSystem *quad[POOL_WIDTH];
     int postTouchStage = -1;
+    
+    GameSprite *gs;
 };
 
 #endif // __LAYER_GAME_BASIC_H__

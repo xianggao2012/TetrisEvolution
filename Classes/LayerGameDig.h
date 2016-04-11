@@ -26,7 +26,7 @@ public:
 
 //    void TouchProcessing(float dt);
     
-    GameSprite *gs;
+//    GameSprite *gs;
     void Resume();
     
 };

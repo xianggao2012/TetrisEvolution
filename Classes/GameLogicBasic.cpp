@@ -36,7 +36,8 @@ bool GameLogicBasic::Initialize()
     // 2. mover
     mover.len = BLOCK_COMP;
     mover.type = MOV_STA_NORMAL;
-
+//test
+    _random = 2;
     for(int i = 0; i < BLOCK_COMP; i ++)
     {
         mover.shapes[i][0] = blockSet[_random][i][0];
@@ -72,8 +73,13 @@ bool GameLogicBasic::Initialize()
     
     // test:
     for(int i = 0; i < POOL_WIDTH; i ++) pool.status[i][0] = POOL_BLO_SETTLED;
+    for(int i = 0; i < POOL_WIDTH; i ++) pool.status[i][1] = POOL_BLO_SETTLED;
+    for(int i = 0; i < POOL_WIDTH; i ++) pool.status[i][2] = POOL_BLO_SETTLED;
     pool.status[4][0] = POOL_BLO_EMPTY;
-    pool.status[1][1] = POOL_BLO_SETTLED;
+    pool.status[4][1] = POOL_BLO_EMPTY;
+    pool.status[4][2] = POOL_BLO_EMPTY;
+    pool.status[1][1] = POOL_BLO_EMPTY;
+    
     
     return true;
 }
@@ -332,4 +338,8 @@ int GameLogicBasic::getMoverLength()
 void GameLogicBasic::setPoolDepth(int n)
 {
     pool.depth = n;
+}
+bool GameLogicBasic::isRowCleared(int r)
+{
+    return rowEmpty[r];
 }

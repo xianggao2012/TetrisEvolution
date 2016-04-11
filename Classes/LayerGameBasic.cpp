@@ -158,6 +158,11 @@ bool LayerGameBasic::init()
         addChild(quad[i], 2);
     }
     
+    gs = GameSprite::gameSpriteWithFile("ActiveBlock.png");
+    gs->setPosition(Vec2(400, 1800));
+    gs->setVisible(true);
+    addChild(gs, 1);
+
     return true;
 }
 void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
@@ -362,8 +367,6 @@ void LayerGameBasic::PostTouchClear(float dt)
         effect_Eliminate.clear();
         effect_Eliminate = game->getEliminatedRow();
         scheduleOnce(schedule_selector(LayerGameBasic::EffectRowClear), 0);
-        game->ShrinkRow();
-        
     }
     else postTouchStage = 4;
     
@@ -372,7 +375,111 @@ void LayerGameBasic::PostTouchClear(float dt)
 void LayerGameBasic::PostTouchFall(float dt)
 {
     std::cout<<"PostTouchFall"<<endl;
-    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+    // calculate which row the pool pointer should point to after some rows gone and shrink shift
+    // newRow[0] = 3 means  now the pointer pointed row 0 should points row 3 before cleared rows gone.
+    int newRow[POOL_HEIGHT];    int n_new = 0;
+    int delta[POOL_HEIGHT];     int n_delta = 0;
+    vector<int> rows = game->getEliminatedRow();
+    
+    for(int i = 0; i < POOL_HEIGHT; i ++)
+    {
+        if(game->isRowCleared(i))
+        {
+            n_delta ++ ;
+        }
+        else
+        {
+            newRow[n_new] = i;
+            delta[n_new] = n_delta;
+            n_new ++;
+        }
+    }
+    
+    int threshold = n_new;
+    int count = 0;
+    while(n_new < POOL_HEIGHT)
+    {
+        newRow[n_new] = rows[count ++];
+        delta[n_new] = n_delta;
+        n_new ++;
+    }
+    // switch pointers
+// print first block of each row before switch
+    for(int i = POOL_HEIGHT - 1; i >= 0; i --) std::cout<<"row "<<i<<" "<<pool[0][i]<<endl;
+    
+    int reverse[POOL_HEIGHT];
+    for(int i = 0; i < POOL_HEIGHT; i ++) reverse[newRow[i]] = i;
+    bool done[POOL_HEIGHT] = {false};           // if this row got modified pointer points to
+//    GameSprite *t_row[POOL_WIDTH];              // temp row pointers
+    int n_t_row;                                // and which old row it stores
+    
+    for(int i = 0; i < POOL_HEIGHT; i ++)
+    {
+        if(done[i]) continue;
+        
+        n_t_row = reverse[i];
+        setRowPointerTemp(reverse[i]);           // t_row = reverse[i];
+        setRowPointer(reverse[i], i);       //newRow[reverse[i]] = i;
+        done[i] = true; // got a pointer points to this
+        
+        while(!done[n_t_row])
+        {
+            setRowPointerSwitch(reverse[n_t_row]);       //newRow[reverse[t_row]] = t_row;
+//            setRowPointer(reverse[n_t_row]);               //t_row = reverse[t_row];
+            done[n_t_row] = true;
+            n_t_row = reverse[n_t_row];
+        }
+    }
+    
+// print first block of each row before switch
+    for(int i = POOL_HEIGHT - 1; i >= 0; i --) std::cout<<"row "<<i<<" "<<pool[0][i]<<endl;
+    // fall
+    for(int j = 0; j < POOL_HEIGHT; j ++)
+    {
+        if(j < threshold)
+        {
+            for(int i = 0; i < POOL_WIDTH; i ++)
+            {
+                ActionInterval *moveto = MoveBy::create(1, Vec2(0, - BLOCK_SIZE * delta[j]));
+                pool[i][j]->runAction(moveto);
+            }
+        }
+        else
+        {
+            for(int i = 0; i < POOL_WIDTH; i ++)
+            {
+                ActionInterval *moveto = MoveTo::create(0, Vec2(i * BLOCK_SIZE_F + POOL_LEFT_BORDER, j * BLOCK_SIZE_F + POOL_BOTTOM_BORDER));
+                pool[i][j]->runAction(moveto);
+            }
+        }
+    }
+    
+    game->ShrinkRow();
+    
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 1);
+}
+//void LayerGameBasic::setRowPointer(GameSprite *to[], int from)
+//{
+//    for(int i = 0; i < POOL_WIDTH; i ++) to[i] = pool[i][from];
+//}
+
+void LayerGameBasic::setRowPointerTemp(int from)
+{
+    for(int i = 0; i < POOL_WIDTH; i ++) t_row[i] = pool[i][from];
+}
+void LayerGameBasic::setRowPointer(int to, int from)
+{
+    for(int i = 0; i < POOL_WIDTH; i ++) pool[i][to] = pool[i][from];
+}
+void LayerGameBasic::setRowPointerSwitch(int from)
+{
+    GameSprite *t;
+    for(int i = 0; i < POOL_WIDTH; i ++)
+    {
+        t = t_row[i];
+        t_row[i] = pool[i][from];
+        pool[i][from] = t;
+    }
 }
 void LayerGameBasic::PostTouchGenerate(float dt)
 {
@@ -383,7 +490,7 @@ void LayerGameBasic::PostTouchGenerate(float dt)
 void LayerGameBasic::PostTouchDig(float dt)
 {
     std::cout<<"PostTouchDig"<<endl;
-    game->DigDown(effect_Eliminate.size());
+//    game->DigDown(effect_Eliminate.size());
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
 void LayerGameBasic::menuCloseCallback(Ref* pSender)

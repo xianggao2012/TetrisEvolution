@@ -32,10 +32,10 @@ bool LayerGameDig::init()
 
     game->setPoolDepth(3);
     
-    gs = GameSprite::gameSpriteWithFile("ActiveBlock.png");
-    gs->setPosition(Vec2(400, 1800));
-    gs->setVisible(true);
-    addChild(gs, 1);
+//    gs = GameSprite::gameSpriteWithFile("ActiveBlock.png");
+//    gs->setPosition(Vec2(400, 1800));
+//    gs->setVisible(true);
+//    addChild(gs, 1);
     
     
     return true;

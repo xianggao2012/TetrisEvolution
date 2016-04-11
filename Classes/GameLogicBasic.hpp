@@ -71,6 +71,7 @@ public:
     int getMoverLength();
 
     void setPoolDepth(int);
+    bool isRowCleared(int);
 };
 
 #endif /* GameLogicBasic_hpp */
