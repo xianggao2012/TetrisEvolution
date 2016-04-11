@@ -7,7 +7,6 @@
 //#include "extensions/cocos-ext.h"
 
 USING_NS_CC;
-
 Scene* LayerGameBasic::createScene()
 {
     // 'scene' is an autorelease object
@@ -22,7 +21,6 @@ Scene* LayerGameBasic::createScene()
     // return the scene
     return scene;
 }
-
 // on "init" you need to initialize your instance
 bool LayerGameBasic::init()
 {
@@ -124,6 +122,8 @@ bool LayerGameBasic::init()
     myMap["DownButton"] = &LayerGameBasic::MoveDown;
     myMap["RotateButton"] = &LayerGameBasic::Rotate;
     myMap["BottomButton"] = &LayerGameBasic::MoveToBottom;
+    myMap["Pause"] = &LayerGameBasic::Pause;
+    myMap["Unpause"] = &LayerGameBasic::Unpause;
     
     for(unordered_map<string, unordered_map<string, string> >::iterator iter = config.begin(); iter != config.end(); iter++)
     {
@@ -154,63 +154,91 @@ bool LayerGameBasic::init()
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         quad[i] = ParticleSystemQuad::create("fire.plist");
-        quad[i]->setDuration(0.5);
+        quad[i]->setDuration(0.1);
         addChild(quad[i], 2);
     }
     
     return true;
 }
-
-void LayerGameBasic::update(float dt) {
-
-    for(int i = 0; i < POOL_WIDTH; i ++)
-    {
-        for(int j = 0; j < POOL_HEIGHT; j ++)
-        {
-            if(game->getPoolStatus(i, j) != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
-            else pool[i][j]->setVisible(false);
-        }
-    }
-    
-    for(int i = 0; i < BLOCK_COMP; i ++ )
-    {
-        mover[i]->setPosition(getMoverPosition(i));
-    }
-}
-
-void LayerGameBasic::DropDown(float dt)
-{
-    if(game->DropDown())
-    {
-        MergeEliminateGenerate();
-    }
-}
-
 void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
 {
+    std::cout<<"MoveLeft  ----"<<endl;
     game->MoveLeft();
+    
 }
-
 void LayerGameBasic::MoveRight(Ref *sender,Control::EventType controlEvent)
 {
+    std::cout<<"MoveRight  ----"<<endl;
     game->MoveRight();
 }
-
-void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
-{
-    if(game->DropDown())
-    {
-        MergeEliminateGenerate();
-    }
-}
-
 void LayerGameBasic::Rotate(Ref *sender,Control::EventType controlEvent)
 {
     game->Rotate();
 }
-
+void LayerGameBasic::Pause(Ref *sender,Control::EventType controlEvent)
+{
+    Director::getInstance()->pause();
+}
+void LayerGameBasic::Unpause(Ref *sender,Control::EventType controlEvent)
+{
+    Director::getInstance()->resume();
+}
+void LayerGameBasic::update(float dt)
+{
+    std::cout<<"------------------------"<<endl;
+    std::cout<<"update---"<<count++<<"---dt:"<<dt<<endl;
+    
+    if(!isIsolated())
+    {
+        for(int i = 0; i < POOL_WIDTH; i ++)
+        {
+            for(int j = 0; j < POOL_HEIGHT; j ++)
+            {
+                if(game->getPoolStatus(i, j) != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
+                else pool[i][j]->setVisible(false);
+            }
+        }
+        
+        for(int i = 0; i < BLOCK_COMP; i ++ )
+        {
+            mover[i]->setPosition(getMoverPosition(i));
+        }
+    }
+}
+void LayerGameBasic::DropDown(float dt)
+{
+    std::cout<<"DropDown  ----"<<endl;
+    
+    if(isIsolated()) return;
+    if(game->DropDown())
+    {
+        if(postTouchStage < 0)
+        {
+            postTouchStage = 0;
+            scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+        }
+    }
+}
+void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
+{ std::cout<<"MoveDown  ----"<<endl;
+    
+    if(isIsolated()) return;
+    
+    if(game->DropDown())    // multi actions may happen in 1 frame. Make sure no redundant post-processing
+    {
+        if(postTouchStage < 0)
+        {
+            postTouchStage = 0;
+            scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+        }
+    }
+}
 void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
 {
+    std::cout<<"movetobottom----"<<endl;
+    
+    if(isIsolated()) return;
+    
     bool touched = false;
     while(!touched)
     {
@@ -226,32 +254,36 @@ void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
     // effect
     scheduleOnce(schedule_selector(LayerGameBasic::EffectMoveDown), 0);
     
-    MergeEliminateGenerate();
+    if(postTouchStage < 0)
+    {
+        postTouchStage = 0;
+        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+    }
 }
-
 void LayerGameBasic::labelMenuCallback(Ref* pSender)
 {
     auto scene = LayerMenu::createScene();
-    Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
+    //Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
+    Director::getInstance()->replaceScene(scene);
     //释放
     //scene->release();
-}
-
+}    
 void LayerGameBasic::EffectMoveDown(float dt)
 {
+    std::cout<<"EffectMoveDown  ----"<<endl;
     for(auto effect : effect_MoveDown)
     {
         ParticleFire* quad = ParticleFire::create();
         quad->setPosition(effect);
-        quad->setDuration(0.5);
+        quad->setDuration(0.1);
         quad->setAutoRemoveOnFinish(true);
         this->addChild(quad,2,1);
     }
     effect_MoveDown.clear();
 }
-
 void LayerGameBasic::EffectRowClear(float dt)
 {
+    std::cout<<"EffectRowClear  ----"<<endl;
     for(auto row : effect_Eliminate)
     {
         for(int i = 0; i < POOL_WIDTH; i ++)
@@ -261,33 +293,99 @@ void LayerGameBasic::EffectRowClear(float dt)
         }
     }
 }
-
-void LayerGameBasic::RowClear()
+void LayerGameBasic::TouchProcessing(float dt)
 {
-    game->EliminateRow();
+    std::cout<<"TouchProcessing beging ----"<<postTouchStage<<endl;
+    switch(postTouchStage)
+    {
+        case 0:
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchMerge), 0.5);
+            postTouchStage ++;
+            break;
+        case 1:
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchClear), 0);
+            postTouchStage ++;
+            
+            break;
+        case 2:
+            EnableIsolation(0);
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchFall), 0);
+            postTouchStage ++;
+            
+            break;
+        case 3:
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
+            postTouchStage ++;
+            DisableIsolation(0);
+            break;
+        case 4:
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchGenerate), 0);
+            postTouchStage ++;
+            
+            break;
+        case 5:
+            postTouchStage = -1;
+            
+            break;
+        default: break;
+    }
+    std::cout<<"TouchProcessing end ----"<<postTouchStage<<endl;
 }
-
-void LayerGameBasic::MergeEliminateGenerate()
+Vec2 LayerGameBasic::getMoverPosition(int n)
 {
+    pair<int, int> pos = game->getMoverPosition(n);
+    return pool[pos.first][pos.second]->getPosition();
+}
+void LayerGameBasic::EnableIsolation(float dt)
+{
+    b_isolation ++;
+}
+void LayerGameBasic::DisableIsolation(float dt)
+{
+    b_isolation --;
+}
+bool LayerGameBasic::isIsolated()
+{
+    return b_isolation > 0;
+}
+void LayerGameBasic::PostTouchMerge(float dt)
+{
+    std::cout<<"PostTouchMerge"<<endl;
     game->MergeMover();
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+}
+void LayerGameBasic::PostTouchClear(float dt)
+{
+    std::cout<<"PostTouchClear"<<endl;
     if(game->EliminateRow())
     {
         effect_Eliminate.clear();
         effect_Eliminate = game->getEliminatedRow();
         scheduleOnce(schedule_selector(LayerGameBasic::EffectRowClear), 0);
         game->ShrinkRow();
+        
     }
-    game->Generate();
+    else postTouchStage = 4;
+    
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
-
-
-Vec2 LayerGameBasic::getMoverPosition(int n)
+void LayerGameBasic::PostTouchFall(float dt)
 {
-    pair<int, int> pos = game->getMoverPosition(n);
-    return pool[pos.first][pos.second]->getPosition();
+    std::cout<<"PostTouchFall"<<endl;
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
-
-
+void LayerGameBasic::PostTouchGenerate(float dt)
+{
+    std::cout<<"PostTouchGenerate"<<endl;
+    game->Generate();
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+}
+void LayerGameBasic::PostTouchDig(float dt)
+{
+    std::cout<<"PostTouchDig"<<endl;
+    game->DigDown(effect_Eliminate.size());
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+}
 void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)

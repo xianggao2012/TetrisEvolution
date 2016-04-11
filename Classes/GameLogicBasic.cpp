@@ -325,8 +325,11 @@ pair<int, int> GameLogicBasic::getMoverPosition(int n)
     return ret;
 }
 
-
 int GameLogicBasic::getMoverLength()
 {
     return mover.len;
+}
+void GameLogicBasic::setPoolDepth(int n)
+{
+    pool.depth = n;
 }

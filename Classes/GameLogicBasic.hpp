@@ -38,7 +38,7 @@ struct Mover
 class GameLogicBasic
 {
 private:
-public:   
+    
     Pool pool;
     Mover mover;
     Mover candidates[CANDIDATES];
@@ -64,11 +64,13 @@ public:
     bool GenerateRow(int);
     void ShrinkRow();
     
-    // customer support, get info
+    // customer support, get info & set info
     vector<int> getEliminatedRow();
     pair<int, int> getMoverPosition(int);    // each block in the mover
     int getPoolStatus(int, int);
     int getMoverLength();
+
+    void setPoolDepth(int);
 };
 
 #endif /* GameLogicBasic_hpp */

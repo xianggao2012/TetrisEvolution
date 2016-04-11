@@ -24,7 +24,11 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(LayerGameDig);
 
-    void MergeEliminateGenerate();
+//    void TouchProcessing(float dt);
+    
+    GameSprite *gs;
+    void Resume();
+    
 };
 
 #endif // __LAYER_GAME_DIG_H__

@@ -110,7 +110,10 @@ void LayerMenu::imageMenuCallback(Ref* pSender)
 void LayerMenu::labelMenuCallback(Ref* pSender)
 {
     auto scene = LayerGameDig::createScene();
-    Director::getInstance()->replaceScene( TransitionFade::create(0, scene));
+    //Director::getInstance()->replaceScene( TransitionFade::create(0, scene));
+    Director::getInstance()->replaceScene(scene);
+    
+    
 //    auto scene = LayerGameClassic::createScene();
 //    Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
 //    //释放

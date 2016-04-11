@@ -43,5 +43,19 @@
             <py>500.0</py>
             <type>2</type>
         </BottomButton>
+        <Pause>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1300.0</px>
+            <py>800.0</py>
+            <type>2</type>
+        </Pause>
+        <Unpause>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1500.0</px>
+            <py>800.0</py>
+            <type>2</type>
+        </Unpause>
     </LayerGameBasic>
 </element_list>

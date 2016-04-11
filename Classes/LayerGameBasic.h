@@ -15,46 +15,81 @@ USING_NS_CC;
 class LayerGameBasic : public cocos2d::Layer
 {
 public:
-    // there's no 'id' in cpp, so we recommend returning the class instance pointer
+    /*
+     ** basics
+     */
     static cocos2d::Scene* createScene();
-
-    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
-    virtual bool init();  
-    
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-    
-    void labelMenuCallback(Ref* pSender);
     
     // implement the "static create()" method manually
     CREATE_FUNC(LayerGameBasic);
-
-    // Added code
-    GameLogicBasic *game;
     
-    GameSprite *pool[POOL_WIDTH][POOL_HEIGHT];
-    GameSprite *left, *right, *rotate;
-    GameSprite *mover[BLOCK_COMP];
+    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
+    virtual bool init();  
     
     void update(float dt);
-    void DropDown(float dt);
+    
+    /*
+     ** callbacks
+     */
+    void menuCloseCallback(cocos2d::Ref* pSender);
+    void labelMenuCallback(Ref* pSender);
+    
+    /*
+     ** actions
+     */
     void MoveLeft(Ref *sender,Control::EventType controlEvent);
     void MoveRight(Ref *sender,Control::EventType controlEvent);
     void MoveDown(Ref *sender,Control::EventType controlEvent);
     void MoveToBottom(Ref *sender,Control::EventType controlEvent);
     void Rotate(Ref *sender,Control::EventType controlEvent);
-    void RowClear();
-    virtual void MergeEliminateGenerate();
+    void Pause(Ref *sender,Control::EventType controlEvent);
+    void Unpause(Ref *sender,Control::EventType controlEvent);
     
+    void DropDown(float dt);
+    
+    /*
+     ** support
+     */
     Vec2 getMoverPosition(int);
     
-    //Particle effects
+    
+    int count = 0;
+protected:
+    
+    GameLogicBasic *game;
+    GameSprite *pool[POOL_WIDTH][POOL_HEIGHT];
+    GameSprite *left, *right, *rotate;
+    GameSprite *mover[BLOCK_COMP];
+    int b_isolation = 0;
+    bool isIsolated();
+    /*
+     ** game operations; detail controll
+     */
+    virtual void TouchProcessing(float dt);
+    
+    /*
+     **Particle effects
+     */
     vector<cocos2d::Vec2> effect_MoveDown;
+
+
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
+public:
     void EffectRowClear(float dt);
+    void EnableIsolation(float dt);
+    void DisableIsolation(float dt);
     
+    void PostTouchMerge(float dt);
+    void PostTouchClear(float dt);
+    void PostTouchFall(float dt);
+    void PostTouchDig(float dt);
+    void PostTouchGenerate(float dt);
+    
+
+protected:
     cocos2d::ParticleSystem *quad[POOL_WIDTH];
+    int postTouchStage = -1;
 };
 
 #endif // __LAYER_GAME_BASIC_H__
