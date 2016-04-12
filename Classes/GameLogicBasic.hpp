@@ -75,6 +75,8 @@ public:
     void setPoolDepth(int);
     bool isRowCleared(int);
     bool isMoverActive();
+    
+    void RemoveBlock(int, int);
 };
 
 #endif /* GameLogicBasic_hpp */

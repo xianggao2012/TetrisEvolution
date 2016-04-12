@@ -27,7 +27,7 @@ public:
     virtual bool init();  
     
     void update(float dt);
-    
+    virtual void onEnter() override;
     /*
      ** callbacks
      */
@@ -44,9 +44,10 @@ public:
     void Rotate(Ref *sender,Control::EventType controlEvent);
     void Pause(Ref *sender,Control::EventType controlEvent);
     void Unpause(Ref *sender,Control::EventType controlEvent);
+    void ItemLightning(Ref *sender,Control::EventType controlEvent);
     
     void DropDown(float dt);
-    
+    void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
     /*
      ** support
      */
@@ -77,6 +78,9 @@ protected:
 
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
+    
+    enum {ITEM_LIGHTNING = 0};
+    bool ItemStatus[10];
 public:
     void EffectRowClear(float dt);
     void EnableIsolation(float dt);
@@ -87,6 +91,9 @@ public:
     void PostTouchFall(float dt);
     void PostTouchDig(float dt);
     void PostTouchGenerate(float dt);
+    
+    void ItemLightningAction(int, int);
+    void ItemLightningEffect(int, int);
     
     void setRowPointer(int to, int from);
     void setRowPointerSwitch(int from);

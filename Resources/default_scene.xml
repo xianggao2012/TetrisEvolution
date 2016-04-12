@@ -57,5 +57,12 @@
             <py>800.0</py>
             <type>2</type>
         </Unpause>
+        <ItemLightning>
+            <imageDefault>StayedBlock.png</imageDefault>
+            <imageClicked>ActiveBlock.png</imageClicked>
+            <px>1400.0</px>
+            <py>1000.0</py>
+            <type>2</type>
+        </ItemLightning>
     </LayerGameBasic>
 </element_list>
