@@ -190,9 +190,7 @@ void LayerGameBasic::Unpause(Ref *sender,Control::EventType controlEvent)
 }
 void LayerGameBasic::update(float dt)
 {
-    std::cout<<"------------------------"<<endl;
-    std::cout<<"update---"<<count++<<"---dt:"<<dt<<endl;
-    
+    std::cout<<"update  ----:"<<count ++<<" isolated:"<<isIsolated()<<endl;
     if(!isIsolated())
     {
         for(int i = 0; i < POOL_WIDTH; i ++)
@@ -204,10 +202,15 @@ void LayerGameBasic::update(float dt)
             }
         }
         
-        for(int i = 0; i < BLOCK_COMP; i ++ )
+        if(game->isMoverActive())
         {
-            mover[i]->setPosition(getMoverPosition(i));
+            for(int i = 0; i < BLOCK_COMP; i ++ )
+            {
+                mover[i]->setPosition(getMoverPosition(i));
+            }
         }
+        else
+            for(auto block : mover) block->setPosition(Vec2(-100, -100));
     }
 }
 void LayerGameBasic::DropDown(float dt)
@@ -304,7 +307,7 @@ void LayerGameBasic::TouchProcessing(float dt)
     switch(postTouchStage)
     {
         case 0:
-            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchMerge), 0.5);
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchMerge), 0);
             postTouchStage ++;
             break;
         case 1:
@@ -313,17 +316,18 @@ void LayerGameBasic::TouchProcessing(float dt)
             
             break;
         case 2:
-            EnableIsolation(0);
+//            EnableIsolation(0);
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchFall), 0);
             postTouchStage ++;
             
             break;
         case 3:
+//            DisableIsolation(0);
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
             postTouchStage ++;
-            DisableIsolation(0);
             break;
         case 4:
+//            DisableIsolation(0);
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchGenerate), 0);
             postTouchStage ++;
             
@@ -375,6 +379,7 @@ void LayerGameBasic::PostTouchClear(float dt)
 void LayerGameBasic::PostTouchFall(float dt)
 {
     std::cout<<"PostTouchFall"<<endl;
+    float speed = 0.5;
     // calculate which row the pool pointer should point to after some rows gone and shrink shift
     // newRow[0] = 3 means  now the pointer pointed row 0 should points row 3 before cleared rows gone.
     int newRow[POOL_HEIGHT];    int n_new = 0;
@@ -404,8 +409,6 @@ void LayerGameBasic::PostTouchFall(float dt)
         n_new ++;
     }
     // switch pointers
-// print first block of each row before switch
-    for(int i = POOL_HEIGHT - 1; i >= 0; i --) std::cout<<"row "<<i<<" "<<pool[0][i]<<endl;
     
     int reverse[POOL_HEIGHT];
     for(int i = 0; i < POOL_HEIGHT; i ++) reverse[newRow[i]] = i;
@@ -431,8 +434,6 @@ void LayerGameBasic::PostTouchFall(float dt)
         }
     }
     
-// print first block of each row before switch
-    for(int i = POOL_HEIGHT - 1; i >= 0; i --) std::cout<<"row "<<i<<" "<<pool[0][i]<<endl;
     // fall
     for(int j = 0; j < POOL_HEIGHT; j ++)
     {
@@ -440,7 +441,7 @@ void LayerGameBasic::PostTouchFall(float dt)
         {
             for(int i = 0; i < POOL_WIDTH; i ++)
             {
-                ActionInterval *moveto = MoveBy::create(1, Vec2(0, - BLOCK_SIZE * delta[j]));
+                ActionInterval *moveto = MoveBy::create(speed, Vec2(0, - BLOCK_SIZE * delta[j]));
                 pool[i][j]->runAction(moveto);
             }
         }
@@ -456,13 +457,8 @@ void LayerGameBasic::PostTouchFall(float dt)
     
     game->ShrinkRow();
     
-    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 1);
+    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), speed);
 }
-//void LayerGameBasic::setRowPointer(GameSprite *to[], int from)
-//{
-//    for(int i = 0; i < POOL_WIDTH; i ++) to[i] = pool[i][from];
-//}
-
 void LayerGameBasic::setRowPointerTemp(int from)
 {
     for(int i = 0; i < POOL_WIDTH; i ++) t_row[i] = pool[i][from];
@@ -490,9 +486,64 @@ void LayerGameBasic::PostTouchGenerate(float dt)
 void LayerGameBasic::PostTouchDig(float dt)
 {
     std::cout<<"PostTouchDig"<<endl;
-//    game->DigDown(effect_Eliminate.size());
-    scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+    
+    float speed = 1.0;
+    
+    int delta = effect_Eliminate.size();
+    
+    delta = game->DigDown(delta);
+
+    if(delta > 0)
+    {
+        bool done[POOL_HEIGHT] = {false};
+        int n_t_row;
+      
+        for(int j = 0; j < POOL_HEIGHT; j ++)
+        {
+            if(done[j]) continue;
+            
+            n_t_row = (delta + j) % POOL_HEIGHT;
+            setRowPointerTemp((delta + j) % POOL_HEIGHT);
+            setRowPointer((delta + j) % POOL_HEIGHT, j);
+            done[j] = true;
+            
+            while(!done[n_t_row])
+            {
+                setRowPointerSwitch((delta + n_t_row) % POOL_HEIGHT);
+                done[n_t_row] = true;
+                n_t_row = (delta + n_t_row) % POOL_HEIGHT;
+            }
+        }
+
+        // move top to bottom
+        for(int j = 0; j < delta; j ++)
+        {
+            for(int i = 0; i < POOL_WIDTH; i ++)
+            {
+                pool[i][j]->setPosition(cocos2d::Point{
+                    pool[i][j]->getPositionX(),
+                    pool[i][j]->getPositionY() - BLOCK_SIZE_F * (POOL_HEIGHT)
+                });
+            }
+            
+        }
+        
+        
+        // riseup
+        for(int i = 0; i < POOL_WIDTH; i ++)
+        {
+            for(int j = 0; j < POOL_HEIGHT; j ++)
+            {
+                ActionInterval *moveto = MoveBy::create(speed, Vec2(0, BLOCK_SIZE_F * delta));
+                pool[i][j]->runAction(moveto);
+            }
+        }
+        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), speed);
+    }
+    else
+        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
+
 void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)

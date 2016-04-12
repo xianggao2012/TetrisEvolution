@@ -34,6 +34,8 @@ struct Mover
     
     int status[BLOCK_COMP];       // 0-default, 1-white 2-black 3-white bomb 4-black bomb
     pair<int, int> positions[BLOCK_COMP];
+    
+    bool isActive;
 };
 class GameLogicBasic
 {
@@ -60,7 +62,7 @@ public:
     void Generate();
     void MergeMover();
     bool EliminateRow();
-    bool DigDown(int);
+    int DigDown(int);
     bool GenerateRow(int);
     void ShrinkRow();
     
@@ -72,6 +74,7 @@ public:
 
     void setPoolDepth(int);
     bool isRowCleared(int);
+    bool isMoverActive();
 };
 
 #endif /* GameLogicBasic_hpp */

@@ -7,6 +7,8 @@
 //
 
 #include "GameLogicBasic.hpp"
+#include<iostream>
+using namespace std;
 
 static const int blockSet[BLOCK_TYPES][BLOCK_COMP][2] =
 {
@@ -36,6 +38,7 @@ bool GameLogicBasic::Initialize()
     // 2. mover
     mover.len = BLOCK_COMP;
     mover.type = MOV_STA_NORMAL;
+    mover.isActive = false;
 //test
     _random = 2;
     for(int i = 0; i < BLOCK_COMP; i ++)
@@ -67,7 +70,7 @@ bool GameLogicBasic::Initialize()
     {
         mover.positions[i] = pair<int, int>(x + mover.shapes[i][0], y - mover.shapes[i][1]);
     }
-
+    mover.isActive = true;
     // 5. row set to not full
     for(int i = 0; i < POOL_HEIGHT; i ++) rowEmpty[i] = false;
     
@@ -103,6 +106,7 @@ bool GameLogicBasic::DropDown()
 void GameLogicBasic::MergeMover()
 {
     for(auto &block : mover.positions) pool.status[block.first][block.second] = POOL_BLO_SETTLED;
+    mover.isActive = false;
 }
 
 void GameLogicBasic::Generate()
@@ -146,6 +150,8 @@ void GameLogicBasic::Generate()
     {
         mover.positions[i] = pair<int, int>(x + mover.shapes[i][0], y - mover.shapes[i][1]);
     }
+    
+    mover.isActive = true;
 }
 
 bool GameLogicBasic::MoveLeft()
@@ -285,21 +291,21 @@ vector<int> GameLogicBasic::getEliminatedRow()
     return ret;
 }
 
-bool GameLogicBasic::DigDown(int n)
+int GameLogicBasic::DigDown(int n)
 {
-    if(pool.depth == 0) return false;
+    if(pool.depth == 0) return -1;
     
     int delta = pool.depth >= n ? n : pool.depth;
     pool.depth = pool.depth == delta ? 0 : (pool.depth - delta);
     
     for(int i = POOL_HEIGHT - delta - 1; i >= 0; i--)
     {
-        MoveRowTo(i, delta);
+        MoveRowTo(i, i + delta);
     }
     
     GenerateRow(delta);
     
-    return true;
+    return delta;
 }
 
 bool GameLogicBasic::GenerateRow(int n)
@@ -342,4 +348,8 @@ void GameLogicBasic::setPoolDepth(int n)
 bool GameLogicBasic::isRowCleared(int r)
 {
     return rowEmpty[r];
+}
+bool GameLogicBasic::isMoverActive()
+{
+    return mover.isActive;
 }
