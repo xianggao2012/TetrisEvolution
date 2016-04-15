@@ -12,6 +12,9 @@ using namespace std;
 #include "cocos-ext.h"
 using namespace cocos2d::extension;
 
+#include "PostWorkFlow.h"
+
+
 class LayerGameDig : public LayerGameBasic
 {
 public:
@@ -24,11 +27,10 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(LayerGameDig);
 
-    void TouchProcessing(float dt);
+    
     
     void Resume();
     
-    void PostTouchDig(float dt);
     
     
     enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
@@ -41,6 +43,8 @@ public:
     void ItemLightningEffect(int, int);
     virtual void onEnter() override;
     void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
+    
+    class PostWorkFlow workflows[20];
 };
 
 #endif // __LAYER_GAME_DIG_H__

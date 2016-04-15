@@ -12,6 +12,8 @@ using namespace std;
 using namespace cocos2d::extension;
 USING_NS_CC;
 
+#include "PostWorkFlow.h"
+
 class LayerGameBasic : public cocos2d::Layer
 {
 public:
@@ -86,6 +88,7 @@ public:
     void PostTouchMerge(float dt);
     void PostTouchClear(float dt);
     void PostTouchFall(float dt);
+    void PostTouchDig(float dt);
     void PostTouchGenerate(float dt);
     
     
@@ -103,7 +106,7 @@ protected:
     
     
     enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
-    bool postTouch = false;
+    class PostWorkFlow workflows[20];
 };
 
 #endif // __LAYER_GAME_BASIC_H__

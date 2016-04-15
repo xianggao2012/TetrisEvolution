@@ -158,6 +158,8 @@ bool LayerGameBasic::init()
         addChild(quad[i], 2);
     }
     
+    workflows[POST_TOUCH].setMaxStage(6);
+    
     return true;
 }
 void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
@@ -288,15 +290,12 @@ void LayerGameBasic::PostWorkFlow(int workflow)
     switch(workflow)
     {
         case POST_TOUCH:
-            if(postTouch) return;
+            if(workflows[POST_TOUCH].isActive()) return;
             else
             {
-                postTouch = true;
+                workflows[POST_TOUCH].setActive(true);
                 scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
             }
-            break;
-        case POST_LIGHTENING:
-            
             break;
             
         default:
@@ -306,37 +305,41 @@ void LayerGameBasic::PostWorkFlow(int workflow)
 void LayerGameBasic::TouchProcessing(float dt)
 {
     std::cout<<"TouchProcessing beging ----"<<postTouchStage<<endl;
-    switch(postTouchStage)
+    switch(workflows[POST_TOUCH].getStage())
     {
         case 0:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchMerge), 0);
-            postTouchStage ++;
+            workflows[POST_TOUCH].gotoNextStage();
+            
             break;
         case 1:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchClear), 0);
-            postTouchStage ++;
+            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 2:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchFall), 0);
-            postTouchStage ++;
+            workflows[POST_TOUCH].gotoNextStage();
             
             break;
-//        case 3:
-//            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
-//            postTouchStage ++;
-//            break;
+        case 3:
+            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
+            workflows[POST_TOUCH].gotoNextStage();
+            break;
         case 4:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchGenerate), 0);
-            postTouchStage ++;
+            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 5:
-            postTouch = false;
+            workflows[POST_TOUCH].gotoNextStage();
+            workflows[POST_TOUCH].setActive(false);
             
             break;
+            
         default: break;
     }
+
     std::cout<<"TouchProcessing end ----"<<postTouchStage<<endl;
 }
 Vec2 LayerGameBasic::getMoverPosition(int n)
@@ -367,7 +370,7 @@ void LayerGameBasic::PostTouchClear(float dt)
         effect_Eliminate = game->getEliminatedRow();
         scheduleOnce(schedule_selector(LayerGameBasic::EffectRowClear), 0);
     }
-    else postTouchStage = 4;
+    else  workflows[POST_TOUCH].setStage(4);
     
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
@@ -454,6 +457,67 @@ void LayerGameBasic::PostTouchFall(float dt)
     
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), speed);
 }
+void LayerGameBasic::PostTouchDig(float dt)
+{
+    std::cout<<"PostTouchDig"<<endl;
+    
+    float speed = 1.0;
+    
+    int delta = effect_Eliminate.size();
+    
+    delta = game->DigDown(delta);
+    
+    if(delta > 0)
+    {
+        bool done[POOL_HEIGHT] = {false};
+        int n_t_row;
+        
+        for(int j = 0; j < POOL_HEIGHT; j ++)
+        {
+            if(done[j]) continue;
+            
+            n_t_row = (delta + j) % POOL_HEIGHT;
+            setRowPointerTemp((delta + j) % POOL_HEIGHT);
+            setRowPointer((delta + j) % POOL_HEIGHT, j);
+            done[j] = true;
+            
+            while(!done[n_t_row])
+            {
+                setRowPointerSwitch((delta + n_t_row) % POOL_HEIGHT);
+                done[n_t_row] = true;
+                n_t_row = (delta + n_t_row) % POOL_HEIGHT;
+            }
+        }
+        
+        // move top to bottom
+        for(int j = 0; j < delta; j ++)
+        {
+            for(int i = 0; i < POOL_WIDTH; i ++)
+            {
+                pool[i][j]->setPosition(cocos2d::Point{
+                    pool[i][j]->getPositionX(),
+                    pool[i][j]->getPositionY() - BLOCK_SIZE_F * (POOL_HEIGHT)
+                });
+            }
+            
+        }
+        
+        // riseup
+        for(int i = 0; i < POOL_WIDTH; i ++)
+        {
+            for(int j = 0; j < POOL_HEIGHT; j ++)
+            {
+                ActionInterval *moveto = MoveBy::create(speed, Vec2(0, BLOCK_SIZE_F * delta));
+                pool[i][j]->runAction(moveto);
+            }
+        }
+        
+        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), speed);
+    }
+    else
+        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+}
+
 void LayerGameBasic::setRowPointerTemp(int from)
 {
     for(int i = 0; i < POOL_WIDTH; i ++) t_row[i] = pool[i][from];
