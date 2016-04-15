@@ -1,6 +1,6 @@
 #include "LayerMenu.h"
 #include "LayerGameClassic.h"
-#include "LayerGameDig.h"
+#include "LayerGameAdvanced.h"
 USING_NS_CC;
 
 Scene* LayerMenu::createScene()
@@ -109,7 +109,7 @@ void LayerMenu::imageMenuCallback(Ref* pSender)
 }
 void LayerMenu::labelMenuCallback(Ref* pSender)
 {
-    auto scene = LayerGameDig::createScene();
+    auto scene = LayerGameAdvanced::createScene();
     //Director::getInstance()->replaceScene( TransitionFade::create(0, scene));
     Director::getInstance()->replaceScene(scene);
     

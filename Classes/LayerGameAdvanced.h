@@ -1,7 +1,7 @@
 
 
-#ifndef __LAYER_GAME_DIG_H__
-#define __LAYER_GAME_DIG_H__
+#ifndef __LAYER_GAME_ADVANCED_H__
+#define __LAYER_GAME_ADVANCED_H__
 
 #include "cocos2d.h"
 #include "GameLogicBasic.hpp"
@@ -15,7 +15,7 @@ using namespace cocos2d::extension;
 #include "PostWorkFlow.h"
 
 
-class LayerGameDig : public LayerGameBasic
+class LayerGameAdvanced : public LayerGameBasic
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -25,13 +25,8 @@ public:
     virtual bool init();  
 
     // implement the "static create()" method manually
-    CREATE_FUNC(LayerGameDig);
+    CREATE_FUNC(LayerGameAdvanced);
 
-    
-    
-    void Resume();
-    
-    
     
     enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
 
@@ -44,7 +39,6 @@ public:
     virtual void onEnter() override;
     void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
     
-    class PostWorkFlow workflows[20];
 };
 
-#endif // __LAYER_GAME_DIG_H__
+#endif // __LAYER_GAME_ADVANCED_H__

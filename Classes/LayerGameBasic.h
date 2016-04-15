@@ -105,7 +105,7 @@ protected:
     
     
     
-    enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
+    enum postWorkFlowList{POST_TOUCH};
     class PostWorkFlow workflows[20];
 };
 

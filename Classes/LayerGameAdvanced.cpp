@@ -1,17 +1,17 @@
-#include "LayerGameDig.h"
+#include "LayerGameAdvanced.h"
 #include "LayerMenu.h"
 #include "TEHeader.h"
 #include "ConfigFactory.h"
 
 USING_NS_CC;
 
-Scene* LayerGameDig::createScene()
+Scene* LayerGameAdvanced::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = LayerGameDig::create();
+    auto layer = LayerGameAdvanced::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -21,7 +21,7 @@ Scene* LayerGameDig::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool LayerGameDig::init()
+bool LayerGameAdvanced::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -34,11 +34,11 @@ bool LayerGameDig::init()
     
     // Dynamic buttons
     unordered_map<string, unordered_map<string, string>> config;
-    config = ConfigFactory::getInstance()->LoadLayer("LayerGameDig");
+    config = ConfigFactory::getInstance()->LoadLayer("LayerGameAdvanced");
     
-    typedef void (LayerGameDig::*FnPtr)(Ref *sender,Control::EventType controlEvent);
+    typedef void (LayerGameAdvanced::*FnPtr)(Ref *sender,Control::EventType controlEvent);
     std::map<std::string, FnPtr> myMap;
-    myMap["ItemLightning"] = &LayerGameDig::ItemLightning;
+    myMap["ItemLightning"] = &LayerGameAdvanced::ItemLightning;
     
     for(unordered_map<string, unordered_map<string, string> >::iterator iter = config.begin(); iter != config.end(); iter++)
     {
@@ -63,10 +63,12 @@ bool LayerGameDig::init()
     // 3.8 Item
     ItemStatus[ITEM_LIGHTNING] = false;
     
+    workflows[POST_TOUCH].setMaxStage(6);
+    
  
     return true;
 }
-void LayerGameDig::onEnter()
+void LayerGameAdvanced::onEnter()
 {
     cocos2d::Layer::onEnter();
     
@@ -77,7 +79,7 @@ void LayerGameDig::onEnter()
     auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
     dispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
-void LayerGameDig::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event)
+void LayerGameAdvanced::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event)
 {
     std::cout<<"Touch--------"<<endl;
     cocos2d::Point tap;
@@ -101,7 +103,7 @@ void LayerGameDig::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, c
         }
     }
 }
-void LayerGameDig::PostWorkFlow(int workflow)
+void LayerGameAdvanced::PostWorkFlow(int workflow)
 {
     LayerGameBasic::PostWorkFlow(workflow);
     
@@ -116,12 +118,12 @@ void LayerGameDig::PostWorkFlow(int workflow)
     }
 }
 
-void LayerGameDig::ItemLightning(Ref *sender,Control::EventType controlEvent)
+void LayerGameAdvanced::ItemLightning(Ref *sender,Control::EventType controlEvent)
 {
     cout<<"ItemLightning-----"<<endl;
     ItemStatus[ITEM_LIGHTNING] = true;
 }
-void LayerGameDig::ItemLightningAction(int x, int y)
+void LayerGameAdvanced::ItemLightningAction(int x, int y)
 {
     game->RemoveBlock(x, y);
     // pointer shift
@@ -130,7 +132,7 @@ void LayerGameDig::ItemLightningAction(int x, int y)
     
     ItemLightningEffect(x, y);
 }
-void LayerGameDig::ItemLightningEffect(int x, int y)
+void LayerGameAdvanced::ItemLightningEffect(int x, int y)
 {
     std::cout<<"EffectRowClear  ----"<<endl;
     
