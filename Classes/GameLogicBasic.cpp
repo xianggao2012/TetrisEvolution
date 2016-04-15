@@ -90,6 +90,7 @@ bool GameLogicBasic::Initialize()
 bool GameLogicBasic::DropDown()
 {
     bool touched = false;
+    if(!isMoverActive()) return touched;
     
     for(auto &block : mover.positions){
         
@@ -291,11 +292,11 @@ vector<int> GameLogicBasic::getEliminatedRow()
     return ret;
 }
 
-int GameLogicBasic::DigDown(int n)
+int GameLogicBasic::DigDown(int rows)
 {
     if(pool.depth == 0) return -1;
     
-    int delta = pool.depth >= n ? n : pool.depth;
+    int delta = pool.depth >= rows ? rows : pool.depth;
     pool.depth = pool.depth == delta ? 0 : (pool.depth - delta);
     
     for(int i = POOL_HEIGHT - delta - 1; i >= 0; i--)
@@ -308,10 +309,10 @@ int GameLogicBasic::DigDown(int n)
     return delta;
 }
 
-bool GameLogicBasic::GenerateRow(int n)
+bool GameLogicBasic::GenerateRow(int rows)
 {
     int _random;
-    for(int i = 0; i < n; i ++)
+    for(int i = 0; i < rows; i ++)
     {
         for(int j = 0; j < POOL_WIDTH; j ++)
         {
@@ -324,9 +325,9 @@ bool GameLogicBasic::GenerateRow(int n)
     return true;
 }
 
-int GameLogicBasic::getPoolStatus(int x, int y)
+bool GameLogicBasic::isPoolBlockEmpty(int x, int y)
 {
-    return pool.status[x][y];
+    return pool.status[x][y] == POOL_BLO_EMPTY;
 }
 pair<int, int> GameLogicBasic::getMoverPosition(int n)
 {

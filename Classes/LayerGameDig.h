@@ -24,11 +24,23 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(LayerGameDig);
 
-//    void TouchProcessing(float dt);
+    void TouchProcessing(float dt);
     
-//    GameSprite *gs;
     void Resume();
     
+    void PostTouchDig(float dt);
+    
+    
+    enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
+
+    void PostWorkFlow(int workflow);
+    
+    enum ItemInUse{ITEM_LIGHTNING = 0};
+    void ItemLightning(Ref *sender,Control::EventType controlEvent);
+    void ItemLightningAction(int, int);
+    void ItemLightningEffect(int, int);
+    virtual void onEnter() override;
+    void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
 };
 
 #endif // __LAYER_GAME_DIG_H__

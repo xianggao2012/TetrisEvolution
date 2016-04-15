@@ -27,7 +27,6 @@ public:
     virtual bool init();  
     
     void update(float dt);
-    virtual void onEnter() override;
     /*
      ** callbacks
      */
@@ -44,10 +43,8 @@ public:
     void Rotate(Ref *sender,Control::EventType controlEvent);
     void Pause(Ref *sender,Control::EventType controlEvent);
     void Unpause(Ref *sender,Control::EventType controlEvent);
-    void ItemLightning(Ref *sender,Control::EventType controlEvent);
     
     void DropDown(float dt);
-    void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
     /*
      ** support
      */
@@ -62,12 +59,13 @@ protected:
     GameSprite *left, *right, *rotate;
     GameSprite *mover[BLOCK_COMP];
     int b_isolation = 0;
-    bool isIsolated();
     
     GameSprite *t_row[POOL_WIDTH];
+    bool isIsolated();
     /*
      ** game operations; detail controll
      */
+public:
     virtual void TouchProcessing(float dt);
     
     /*
@@ -79,7 +77,6 @@ protected:
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
     
-    enum {ITEM_LIGHTNING = 0};
     bool ItemStatus[10];
 public:
     void EffectRowClear(float dt);
@@ -89,11 +86,8 @@ public:
     void PostTouchMerge(float dt);
     void PostTouchClear(float dt);
     void PostTouchFall(float dt);
-    void PostTouchDig(float dt);
     void PostTouchGenerate(float dt);
     
-    void ItemLightningAction(int, int);
-    void ItemLightningEffect(int, int);
     
     void setRowPointer(int to, int from);
     void setRowPointerSwitch(int from);
@@ -101,9 +95,15 @@ public:
     
 protected:
     cocos2d::ParticleSystem *quad[POOL_WIDTH];
-    int postTouchStage = -1;
+    int postTouchStage = 0;
     
-    GameSprite *gs;
+    
+    virtual void PostWorkFlow(int workflow);
+    
+    
+    
+    enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
+    bool postTouch = false;
 };
 
 #endif // __LAYER_GAME_BASIC_H__

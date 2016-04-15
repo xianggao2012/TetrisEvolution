@@ -16,9 +16,6 @@
 #include<vector>
 using namespace std;
 
-enum {POOL_BLO_EMPTY = 0, POOL_BLO_SETTLED};
-enum {MOV_STA_NORMAL = 0};
-enum {MOV_BLO_NORMAL = 0, MOV_BLO_WHITE, MOV_BLO_BLACK};
 
 struct Pool         // left bottom cornor (0, 0)
 {
@@ -41,10 +38,16 @@ class GameLogicBasic
 {
 private:
     
+    enum poolBlockStatus{POOL_BLO_EMPTY, POOL_BLO_SETTLED};
+    enum moverStatus{MOV_STA_NORMAL};
+    enum moverBlockStatus{MOV_BLO_NORMAL, MOV_BLO_WHITE, MOV_BLO_BLACK};
+    
     Pool pool;
     Mover mover;
     Mover candidates[CANDIDATES];
     bool rowEmpty[POOL_HEIGHT];
+    
+    
     void MoveRowTo(int from, int to);
 public:
     
@@ -62,21 +65,21 @@ public:
     void Generate();
     void MergeMover();
     bool EliminateRow();
-    int DigDown(int);
-    bool GenerateRow(int);
+    int DigDown(int rows);
+    bool GenerateRow(int rows);
     void ShrinkRow();
     
     // customer support, get info & set info
     vector<int> getEliminatedRow();
-    pair<int, int> getMoverPosition(int);    // each block in the mover
-    int getPoolStatus(int, int);
+    pair<int, int> getMoverPosition(int n);    // each block in the mover
+    bool isPoolBlockEmpty(int x, int y);
     int getMoverLength();
 
-    void setPoolDepth(int);
-    bool isRowCleared(int);
+    void setPoolDepth(int depth);
+    bool isRowCleared(int row);
     bool isMoverActive();
     
-    void RemoveBlock(int, int);
+    void RemoveBlock(int x, int y);
 };
 
 #endif /* GameLogicBasic_hpp */

@@ -57,6 +57,8 @@
             <py>800.0</py>
             <type>2</type>
         </Unpause>
+    </LayerGameBasic>
+    <LayerGameDig>
         <ItemLightning>
             <imageDefault>StayedBlock.png</imageDefault>
             <imageClicked>ActiveBlock.png</imageClicked>
@@ -64,5 +66,5 @@
             <py>1000.0</py>
             <type>2</type>
         </ItemLightning>
-    </LayerGameBasic>
+    </LayerGameDig>
 </element_list>

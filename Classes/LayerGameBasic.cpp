@@ -30,7 +30,7 @@ bool LayerGameBasic::init()
     {
         return false;
     }
-    
+
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -124,7 +124,6 @@ bool LayerGameBasic::init()
     myMap["BottomButton"] = &LayerGameBasic::MoveToBottom;
     myMap["Pause"] = &LayerGameBasic::Pause;
     myMap["Unpause"] = &LayerGameBasic::Unpause;
-    myMap["ItemLightning"] = &LayerGameBasic::ItemLightning;
     
     for(unordered_map<string, unordered_map<string, string> >::iterator iter = config.begin(); iter != config.end(); iter++)
     {
@@ -151,9 +150,6 @@ bool LayerGameBasic::init()
     // 3.7 schedule: UPDATE
     schedule( schedule_selector(LayerGameBasic::DropDown), DROP_INTERVAL);
     
-    // 3.8 Item
-    ItemStatus[ITEM_LIGHTNING] = false;
-    
     //
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
@@ -162,11 +158,6 @@ bool LayerGameBasic::init()
         addChild(quad[i], 2);
     }
     
-    gs = GameSprite::gameSpriteWithFile("ActiveBlock.png");
-    gs->setPosition(Vec2(400, 1800));
-    gs->setVisible(true);
-    addChild(gs, 1);
-
     return true;
 }
 void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
@@ -194,55 +185,43 @@ void LayerGameBasic::Unpause(Ref *sender,Control::EventType controlEvent)
 }
 void LayerGameBasic::update(float dt)
 {
-    std::cout<<"update  ----:"<<count ++<<" isolated:"<<isIsolated()<<endl;
-    if(!isIsolated())
+//    std::cout<<"update  ----:"<<count ++<<" isolated:"<<isIsolated()<<endl;
+
+    for(int i = 0; i < POOL_WIDTH; i ++)
     {
-        for(int i = 0; i < POOL_WIDTH; i ++)
+        for(int j = 0; j < POOL_HEIGHT; j ++)
         {
-            for(int j = 0; j < POOL_HEIGHT; j ++)
-            {
-                if(game->getPoolStatus(i, j) != POOL_BLO_EMPTY) pool[i][j]->setVisible(true);
-                else pool[i][j]->setVisible(false);
-            }
+            if(!game->isPoolBlockEmpty(i, j)) pool[i][j]->setVisible(true);
+            else pool[i][j]->setVisible(false);
         }
-        
-        if(game->isMoverActive())
-        {
-            for(int i = 0; i < BLOCK_COMP; i ++ )
-            {
-                mover[i]->setPosition(getMoverPosition(i));
-            }
-        }
-        else
-            for(auto block : mover) block->setPosition(Vec2(-100, -100));
     }
+    
+    if(game->isMoverActive())
+    {
+        for(int i = 0; i < BLOCK_COMP; i ++ )
+        {
+            mover[i]->setPosition(getMoverPosition(i));
+        }
+    }
+    else
+        for(auto block : mover) block->setPosition(Vec2(-100, -100));
+    
 }
 void LayerGameBasic::DropDown(float dt)
 {
     std::cout<<"DropDown  ----"<<endl;
     
-    if(isIsolated()) return;
     if(game->DropDown())
     {
-        if(postTouchStage < 0)
-        {
-            postTouchStage = 0;
-            scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
-        }
+        PostWorkFlow(POST_TOUCH);
     }
 }
 void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
 { std::cout<<"MoveDown  ----"<<endl;
     
-    if(isIsolated()) return;
-    
     if(game->DropDown())    // multi actions may happen in 1 frame. Make sure no redundant post-processing
     {
-        if(postTouchStage < 0)
-        {
-            postTouchStage = 0;
-            scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
-        }
+        PostWorkFlow(POST_TOUCH);
     }
 }
 void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
@@ -266,11 +245,7 @@ void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
     // effect
     scheduleOnce(schedule_selector(LayerGameBasic::EffectMoveDown), 0);
     
-    if(postTouchStage < 0)
-    {
-        postTouchStage = 0;
-        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
-    }
+    PostWorkFlow(POST_TOUCH);
 }
 void LayerGameBasic::labelMenuCallback(Ref* pSender)
 {
@@ -305,6 +280,29 @@ void LayerGameBasic::EffectRowClear(float dt)
         }
     }
 }
+void LayerGameBasic::PostWorkFlow(int workflow)
+{
+    
+    
+    switch(workflow)
+    {
+        case POST_TOUCH:
+            if(postTouch) return;
+            else
+            {
+                postTouch = true;
+                scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
+            }
+            break;
+        case POST_LIGHTENING:
+            
+            break;
+            
+        default:
+            break;
+    }
+}
+
 void LayerGameBasic::TouchProcessing(float dt)
 {
     std::cout<<"TouchProcessing beging ----"<<postTouchStage<<endl;
@@ -320,24 +318,21 @@ void LayerGameBasic::TouchProcessing(float dt)
             
             break;
         case 2:
-//            EnableIsolation(0);
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchFall), 0);
             postTouchStage ++;
             
             break;
-        case 3:
-//            DisableIsolation(0);
-            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
-            postTouchStage ++;
-            break;
+//        case 3:
+//            scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
+//            postTouchStage ++;
+//            break;
         case 4:
-//            DisableIsolation(0);
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchGenerate), 0);
             postTouchStage ++;
             
             break;
         case 5:
-            postTouchStage = -1;
+            postTouch = false;
             
             break;
         default: break;
@@ -487,127 +482,8 @@ void LayerGameBasic::PostTouchGenerate(float dt)
     game->Generate();
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
-void LayerGameBasic::PostTouchDig(float dt)
-{
-    std::cout<<"PostTouchDig"<<endl;
-    
-    float speed = 1.0;
-    
-    int delta = effect_Eliminate.size();
-    
-    delta = game->DigDown(delta);
-
-    if(delta > 0)
-    {
-        bool done[POOL_HEIGHT] = {false};
-        int n_t_row;
-      
-        for(int j = 0; j < POOL_HEIGHT; j ++)
-        {
-            if(done[j]) continue;
-            
-            n_t_row = (delta + j) % POOL_HEIGHT;
-            setRowPointerTemp((delta + j) % POOL_HEIGHT);
-            setRowPointer((delta + j) % POOL_HEIGHT, j);
-            done[j] = true;
-            
-            while(!done[n_t_row])
-            {
-                setRowPointerSwitch((delta + n_t_row) % POOL_HEIGHT);
-                done[n_t_row] = true;
-                n_t_row = (delta + n_t_row) % POOL_HEIGHT;
-            }
-        }
-
-        // move top to bottom
-        for(int j = 0; j < delta; j ++)
-        {
-            for(int i = 0; i < POOL_WIDTH; i ++)
-            {
-                pool[i][j]->setPosition(cocos2d::Point{
-                    pool[i][j]->getPositionX(),
-                    pool[i][j]->getPositionY() - BLOCK_SIZE_F * (POOL_HEIGHT)
-                });
-            }
-            
-        }
-        
-        
-        // riseup
-        for(int i = 0; i < POOL_WIDTH; i ++)
-        {
-            for(int j = 0; j < POOL_HEIGHT; j ++)
-            {
-                ActionInterval *moveto = MoveBy::create(speed, Vec2(0, BLOCK_SIZE_F * delta));
-                pool[i][j]->runAction(moveto);
-            }
-        }
-        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), speed);
-    }
-    else
-        scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
-}
-
-void LayerGameBasic::ItemLightning(Ref *sender,Control::EventType controlEvent)
-{
-    cout<<"ItemLightning-----"<<endl;
-    ItemStatus[ITEM_LIGHTNING] = true;
-}
-void LayerGameBasic::ItemLightningAction(int x, int y)
-{
-    game->RemoveBlock(x, y);
-    // pointer shift
-    
-    //schedule moveby 1
-    
-    ItemLightningEffect(x, y);
-}
-void LayerGameBasic::ItemLightningEffect(int x, int y)
-{
-    std::cout<<"EffectRowClear  ----"<<endl;
-    
-    quad[0]->resetSystem();
-    quad[0]->setPosition(pool[x][y]->getPosition());
-    
-}
 
 
-void LayerGameBasic::onEnter() {
-    cocos2d::Layer::onEnter();
-    
-    auto listener = cocos2d::EventListenerTouchAllAtOnce::create();
-    
-    listener->onTouchesBegan = CC_CALLBACK_2(LayerGameBasic::onTouchesBegan, this);
-    
-    auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-    dispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-}
-
-
-void LayerGameBasic::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event)
-{
-    std::cout<<"Touch--------"<<endl;
-    cocos2d::Point tap;
-    for (const auto& touch : touches) {
-        tap = touch->getLocation();
-        
-        // Out of pool, warning
-        
-        
-        // in the pool
-        for(int i = 0; i < POOL_WIDTH; i ++)
-        {
-            for(int j = 0; j < POOL_HEIGHT; j ++)
-            {
-                if(pool[i][j]->getBoundingBox().containsPoint(tap))
-                {
-                    ItemStatus[ITEM_LIGHTNING] = false;
-                    ItemLightningAction(i, j);
-                }
-            }
-        }
-    }
-}
 
 void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
