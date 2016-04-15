@@ -211,6 +211,8 @@ void LayerGameBasic::DropDown(float dt)
 {
     std::cout<<"DropDown  ----"<<endl;
     
+    if(!game->isMoverActive()) return;
+    
     if(game->DropDown())
     {
         PostWorkFlow(POST_TOUCH);
@@ -218,6 +220,8 @@ void LayerGameBasic::DropDown(float dt)
 }
 void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
 { std::cout<<"MoveDown  ----"<<endl;
+    
+    if(!game->isMoverActive()) return;
     
     if(game->DropDown())    // multi actions may happen in 1 frame. Make sure no redundant post-processing
     {
@@ -227,9 +231,7 @@ void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
 void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
 {
     std::cout<<"movetobottom----"<<endl;
-    
-    if(isIsolated()) return;
-    
+    if(!game->isMoverActive()) return;
     bool touched = false;
     while(!touched)
     {
@@ -282,8 +284,7 @@ void LayerGameBasic::EffectRowClear(float dt)
 }
 void LayerGameBasic::PostWorkFlow(int workflow)
 {
-    
-    
+    std::cout<<"LayerGameBasic::PostWorkFlow--------"<<endl;
     switch(workflow)
     {
         case POST_TOUCH:
@@ -302,7 +303,6 @@ void LayerGameBasic::PostWorkFlow(int workflow)
             break;
     }
 }
-
 void LayerGameBasic::TouchProcessing(float dt)
 {
     std::cout<<"TouchProcessing beging ----"<<postTouchStage<<endl;
@@ -351,10 +351,6 @@ void LayerGameBasic::EnableIsolation(float dt)
 void LayerGameBasic::DisableIsolation(float dt)
 {
     b_isolation --;
-}
-bool LayerGameBasic::isIsolated()
-{
-    return b_isolation > 0;
 }
 void LayerGameBasic::PostTouchMerge(float dt)
 {
@@ -482,9 +478,6 @@ void LayerGameBasic::PostTouchGenerate(float dt)
     game->Generate();
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
-
-
-
 void LayerGameBasic::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
