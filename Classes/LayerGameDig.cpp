@@ -2,6 +2,7 @@
 #include "LayerMenu.h"
 #include "TEHeader.h"
 #include "ConfigFactory.h"
+#include "PostWorkFlow.h"
 
 USING_NS_CC;
 
@@ -62,7 +63,7 @@ bool LayerGameDig::init()
     // 3.8 Item
     ItemStatus[ITEM_LIGHTNING] = false;
     
-
+ 
     return true;
 }
 void LayerGameDig::onEnter()
