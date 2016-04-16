@@ -28,19 +28,16 @@ public:
     CREATE_FUNC(LayerGameAdvanced);
 
     
-    enum postWorkFlowList{POST_TOUCH = 0, POST_LIGHTENING = 1};
-
-    void PostWorkFlow(int workflow) override;
-    
-    void ItemLightning(Ref *sender,Control::EventType controlEvent);
-    void ItemLightningAction(float dt);
-    void EffectItemLightning();
     virtual void onEnter() override;
     void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
     
+    void PostWorkFlow(int workflow) override;
+    enum postWorkFlowList{POST_TOUCH = 0, POST_LIGHTENING = 1};
     
     ItemLightening item_lightening;
+    void ItemLightning(Ref *sender,Control::EventType controlEvent);
     void PostItemLightening(float dt);
+    void ItemLightningAction(float dt);
 };
 
 #endif // __LAYER_GAME_ADVANCED_H__

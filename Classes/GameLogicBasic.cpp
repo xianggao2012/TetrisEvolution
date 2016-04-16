@@ -354,8 +354,10 @@ bool GameLogicBasic::isMoverActive()
 {
     return mover.isActive;
 }
-void GameLogicBasic::RemoveBlock(int x, int y)
+void GameLogicBasic::RemoveBlock(pair<int, int> pos)
 {
+    int x = pos.first;
+    int y = pos.second;
     pool.status[x][y] = POOL_BLO_EMPTY;
     for(int i = y; i < POOL_HEIGHT - 1; i ++)
     {

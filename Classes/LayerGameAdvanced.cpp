@@ -64,6 +64,7 @@ bool LayerGameAdvanced::init()
     item_lightening.setCount(3);
     
     
+    addChild(&item_lightening, Z_ITEM_EFFECT);
     
     // post workflow
     workflows[POST_TOUCH].setMaxStage(6);
@@ -106,7 +107,7 @@ void LayerGameAdvanced::onTouchesBegan(const std::vector<cocos2d::Touch*>& touch
                     // depending on which item is active
                     if(item_lightening.isActive() && !workflows[POST_LIGHTENING].isActive())
                     {
-                        item_lightening.setPoolPosition(Vec2(i, j));
+                        item_lightening.setArrayPosition(pair<int, int>(i, j));
                         workflows[POST_LIGHTENING].setActive(true);
                         PostWorkFlow(POST_LIGHTENING);
                     }
@@ -122,6 +123,7 @@ void LayerGameAdvanced::PostWorkFlow(int workflow)
     switch(workflow)
     {
         case POST_LIGHTENING:
+            // sometimes use func, sometimes need to schedule for later
             PostItemLightening(0);
             
             break;
@@ -136,8 +138,12 @@ void LayerGameAdvanced::PostItemLightening(float dt)
     switch(workflows[POST_LIGHTENING].getStage())
     {
         case 0: // change momdel; make effect
-            game->RemoveBlock(item_lightening.getPoolPosition().x, item_lightening.getPoolPosition().y);
-            EffectItemLightning();
+            game->RemoveBlock(item_lightening.getArrayPosition());
+            
+            item_lightening.setPoolPosition(
+                                            pool[item_lightening.getArrayPosition().first]
+                                            [item_lightening.getArrayPosition().second]->getPosition());
+            item_lightening.startEffect();
 
             workflows[POST_LIGHTENING].gotoNextStage();
             
@@ -163,17 +169,15 @@ void LayerGameAdvanced::PostItemLightening(float dt)
 
 void LayerGameAdvanced::ItemLightning(Ref *sender,Control::EventType controlEvent)
 {
-    cout<<"ItemLightning-----"<<endl;
     if(item_lightening.getCount() <= 0 || item_lightening.isActive()) return;
     
     item_lightening.setActive(true);
 }
 void LayerGameAdvanced::ItemLightningAction(float dt)
 {
-    cout<<"ItemLightningAction-----"<<endl;
     float speed = 0.5;
-    int x = item_lightening.getPoolPosition().x;
-    int y = item_lightening.getPoolPosition().y;
+    int x = item_lightening.getArrayPosition().first;
+    int y = item_lightening.getArrayPosition().second;
     GameSprite *temp = pool[x][y];
     for(int j = y; j < POOL_HEIGHT - 1; j ++)
     {
@@ -191,12 +195,4 @@ void LayerGameAdvanced::ItemLightningAction(float dt)
     pool[x][POOL_HEIGHT - 1]->runAction(moveto);
     
     scheduleOnce(schedule_selector(LayerGameAdvanced::PostItemLightening), speed);
-}
-void LayerGameAdvanced::EffectItemLightning()
-{
-    std::cout<<"EffectItemLightning  ----"<<endl;
-    
-    quad[0]->resetSystem();
-    quad[0]->setPosition(pool[(int)item_lightening.getPoolPosition().x][(int)item_lightening.getPoolPosition().y]->getPosition());
-    
 }

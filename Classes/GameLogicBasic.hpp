@@ -79,7 +79,7 @@ public:
     bool isRowCleared(int row);
     bool isMoverActive();
     
-    void RemoveBlock(int x, int y);
+    void RemoveBlock(pair<int, int> pos);
 };
 
 #endif /* GameLogicBasic_hpp */

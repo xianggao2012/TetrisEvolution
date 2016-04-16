@@ -42,3 +42,7 @@
 #define LGB_BG_Y "py"
 
 #endif /* TEHeader_h */
+
+
+// z axis
+#define Z_ITEM_EFFECT 5
