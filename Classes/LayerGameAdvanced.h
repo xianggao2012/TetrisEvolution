@@ -13,7 +13,7 @@ using namespace std;
 using namespace cocos2d::extension;
 
 #include "PostWorkFlow.h"
-
+#include "ItemLightening.h"
 
 class LayerGameAdvanced : public LayerGameBasic
 {
@@ -28,17 +28,19 @@ public:
     CREATE_FUNC(LayerGameAdvanced);
 
     
-    enum postWorkFlowList{POST_TOUCH, POST_LIGHTENING};
+    enum postWorkFlowList{POST_TOUCH = 0, POST_LIGHTENING = 1};
 
-    void PostWorkFlow(int workflow);
+    void PostWorkFlow(int workflow) override;
     
-    enum ItemInUse{ITEM_LIGHTNING = 0};
     void ItemLightning(Ref *sender,Control::EventType controlEvent);
-    void ItemLightningAction(int, int);
-    void ItemLightningEffect(int, int);
+    void ItemLightningAction(float dt);
+    void EffectItemLightning();
     virtual void onEnter() override;
     void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *unused_event);
     
+    
+    ItemLightening item_lightening;
+    void PostItemLightening(float dt);
 };
 
 #endif // __LAYER_GAME_ADVANCED_H__

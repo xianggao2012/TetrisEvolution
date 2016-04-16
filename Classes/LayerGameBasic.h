@@ -79,7 +79,6 @@ public:
     vector<int> effect_Eliminate;
     void EffectMoveDown(float dt);
     
-    bool ItemStatus[10];
 public:
     void EffectRowClear(float dt);
     void EnableIsolation(float dt);
@@ -105,7 +104,7 @@ protected:
     
     
     
-    enum postWorkFlowList{POST_TOUCH};
+    enum postWorkFlowList{POST_TOUCH = 0};
     class PostWorkFlow workflows[20];
 };
 

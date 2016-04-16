@@ -164,13 +164,11 @@ bool LayerGameBasic::init()
 }
 void LayerGameBasic::MoveLeft(Ref *sender,Control::EventType controlEvent)
 {
-    std::cout<<"MoveLeft  ----"<<endl;
     game->MoveLeft();
     
 }
 void LayerGameBasic::MoveRight(Ref *sender,Control::EventType controlEvent)
 {
-    std::cout<<"MoveRight  ----"<<endl;
     game->MoveRight();
 }
 void LayerGameBasic::Rotate(Ref *sender,Control::EventType controlEvent)
@@ -211,8 +209,6 @@ void LayerGameBasic::update(float dt)
 }
 void LayerGameBasic::DropDown(float dt)
 {
-    std::cout<<"DropDown  ----"<<endl;
-    
     if(!game->isMoverActive()) return;
     
     if(game->DropDown())
@@ -221,8 +217,7 @@ void LayerGameBasic::DropDown(float dt)
     }
 }
 void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
-{ std::cout<<"MoveDown  ----"<<endl;
-    
+{
     if(!game->isMoverActive()) return;
     
     if(game->DropDown())    // multi actions may happen in 1 frame. Make sure no redundant post-processing
@@ -232,7 +227,6 @@ void LayerGameBasic::MoveDown(Ref *sender,Control::EventType controlEvent)
 }
 void LayerGameBasic::MoveToBottom(Ref *sender,Control::EventType controlEvent)
 {
-    std::cout<<"movetobottom----"<<endl;
     if(!game->isMoverActive()) return;
     bool touched = false;
     while(!touched)
@@ -261,7 +255,6 @@ void LayerGameBasic::labelMenuCallback(Ref* pSender)
 }    
 void LayerGameBasic::EffectMoveDown(float dt)
 {
-    std::cout<<"EffectMoveDown  ----"<<endl;
     for(auto effect : effect_MoveDown)
     {
         ParticleFire* quad = ParticleFire::create();
@@ -274,7 +267,6 @@ void LayerGameBasic::EffectMoveDown(float dt)
 }
 void LayerGameBasic::EffectRowClear(float dt)
 {
-    std::cout<<"EffectRowClear  ----"<<endl;
     for(auto row : effect_Eliminate)
     {
         for(int i = 0; i < POOL_WIDTH; i ++)
@@ -286,7 +278,6 @@ void LayerGameBasic::EffectRowClear(float dt)
 }
 void LayerGameBasic::PostWorkFlow(int workflow)
 {
-    std::cout<<"LayerGameBasic::PostWorkFlow--------"<<endl;
     switch(workflow)
     {
         case POST_TOUCH:
@@ -304,7 +295,6 @@ void LayerGameBasic::PostWorkFlow(int workflow)
 }
 void LayerGameBasic::TouchProcessing(float dt)
 {
-    std::cout<<"TouchProcessing beging ----"<<postTouchStage<<endl;
     switch(workflows[POST_TOUCH].getStage())
     {
         case 0:
@@ -339,13 +329,12 @@ void LayerGameBasic::TouchProcessing(float dt)
             
         default: break;
     }
-
-    std::cout<<"TouchProcessing end ----"<<postTouchStage<<endl;
 }
 Vec2 LayerGameBasic::getMoverPosition(int n)
 {
     pair<int, int> pos = game->getMoverPosition(n);
-    return pool[pos.first][pos.second]->getPosition();
+//    return pool[pos.first][pos.second]->getPosition();
+    return Vec2(POOL_LEFT_BORDER + BLOCK_SIZE_F * pos.first, POOL_BOTTOM_BORDER + BLOCK_SIZE_F * pos.second);
 }
 void LayerGameBasic::EnableIsolation(float dt)
 {
@@ -357,13 +346,11 @@ void LayerGameBasic::DisableIsolation(float dt)
 }
 void LayerGameBasic::PostTouchMerge(float dt)
 {
-    std::cout<<"PostTouchMerge"<<endl;
     game->MergeMover();
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
 void LayerGameBasic::PostTouchClear(float dt)
 {
-    std::cout<<"PostTouchClear"<<endl;
     if(game->EliminateRow())
     {
         effect_Eliminate.clear();
@@ -376,7 +363,6 @@ void LayerGameBasic::PostTouchClear(float dt)
 }
 void LayerGameBasic::PostTouchFall(float dt)
 {
-    std::cout<<"PostTouchFall"<<endl;
     float speed = 0.5;
     // calculate which row the pool pointer should point to after some rows gone and shrink shift
     // newRow[0] = 3 means  now the pointer pointed row 0 should points row 3 before cleared rows gone.
@@ -459,8 +445,6 @@ void LayerGameBasic::PostTouchFall(float dt)
 }
 void LayerGameBasic::PostTouchDig(float dt)
 {
-    std::cout<<"PostTouchDig"<<endl;
-    
     float speed = 1.0;
     
     int delta = effect_Eliminate.size();
@@ -538,7 +522,6 @@ void LayerGameBasic::setRowPointerSwitch(int from)
 }
 void LayerGameBasic::PostTouchGenerate(float dt)
 {
-    std::cout<<"PostTouchGenerate"<<endl;
     game->Generate();
     scheduleOnce(schedule_selector(LayerGameBasic::TouchProcessing), 0);
 }
