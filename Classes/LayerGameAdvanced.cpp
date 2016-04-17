@@ -138,7 +138,6 @@ void LayerGameAdvanced::PostItemLightening(float dt)
     switch(workflows[POST_LIGHTENING].getStage())
     {
         case 0: // change momdel; make effect
-            game->RemoveBlock(item_lightening.getArrayPosition());
             
             item_lightening.setPoolPosition(
                                             pool[item_lightening.getArrayPosition().first]
@@ -176,6 +175,9 @@ void LayerGameAdvanced::ItemLightning(Ref *sender,Control::EventType controlEven
 void LayerGameAdvanced::ItemLightningAction(float dt)
 {
     float speed = 0.5;
+    
+    game->RemoveBlock(item_lightening.getArrayPosition());
+    
     int x = item_lightening.getArrayPosition().first;
     int y = item_lightening.getArrayPosition().second;
     GameSprite *temp = pool[x][y];
