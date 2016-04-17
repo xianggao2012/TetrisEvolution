@@ -90,7 +90,7 @@ bool LayerGameBasic::init()
         }
     }
     
-     // 3. add your codes below...
+    // 3. add your codes below...
     unordered_map<string, unordered_map<string, string>> config;
     config = ConfigFactory::getInstance()->LoadLayer("LayerGameBasic");
     
@@ -105,10 +105,12 @@ bool LayerGameBasic::init()
     });
     addChild(court, 1);
     
+    
     // 3.4 mover
     for(int i = 0; i < BLOCK_COMP; i ++)
     {
-        mover[i] = GameSprite::gameSpriteWithFile("ActiveBlock.png");
+        if(game->isMoverBlack(i)) mover[i] = GameSprite::gameSpriteWithFile("ActiveBlackBlock.png");
+        else mover[i] = GameSprite::gameSpriteWithFile("ActiveWhiteBlock.png");
         mover[i]->setVisible(true);
         addChild(mover[i], 2);
     }
@@ -159,6 +161,20 @@ bool LayerGameBasic::init()
     }
     
     workflows[POST_TOUCH].setMaxStage(6);
+   
+    
+    
+    //
+    auto temp_obj = GameSprite::gameSpriteWithFile("StayedBlackBlock.png");
+    StayedBlack = temp_obj->getTexture();
+    auto temp_obj2 = GameSprite::gameSpriteWithFile("StayedWhiteBlock.png");
+    StayedWhite = temp_obj2->getTexture();
+    auto temp_obj3 = Sprite::create("ActiveWhiteBlock.png");
+    ActiveWhite = temp_obj3->getTexture();
+    auto temp_obj4 = Sprite::create("ActiveBlackBlock.png");
+    ActiveBlack = temp_obj4->getTexture();
+ 
+    
     
     return true;
 }
@@ -185,14 +201,17 @@ void LayerGameBasic::Unpause(Ref *sender,Control::EventType controlEvent)
 }
 void LayerGameBasic::update(float dt)
 {
-//    std::cout<<"update  ----:"<<count ++<<" isolated:"<<isIsolated()<<endl;
+    std::cout<<"update  ----:"<<" isolated:"<<endl;
 
     for(int i = 0; i < POOL_WIDTH; i ++)
     {
         for(int j = 0; j < POOL_HEIGHT; j ++)
         {
-            if(!game->isPoolBlockEmpty(i, j)) pool[i][j]->setVisible(true);
-            else pool[i][j]->setVisible(false);
+            pool[i][j]->setVisible(true);
+            
+            if(game->isPoolBlockEmpty(i, j)) pool[i][j]->setVisible(false);
+            else if(game->isPoolBlockBlack(i, j)) pool[i][j]->setTexture(StayedBlack);
+            else pool[i][j]->setTexture(StayedWhite);
         }
     }
     
@@ -200,6 +219,8 @@ void LayerGameBasic::update(float dt)
     {
         for(int i = 0; i < BLOCK_COMP; i ++ )
         {
+            if(game->isMoverBlack(i)) mover[i]->setTexture(ActiveBlack);
+            else mover[i]->setTexture(ActiveWhite);
             mover[i]->setPosition(getMoverPosition(i));
         }
     }
@@ -299,36 +320,31 @@ void LayerGameBasic::TouchProcessing(float dt)
     {
         case 0:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchMerge), 0);
-            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 1:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchClear), 0);
-            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 2:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchFall), 0);
-            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 3:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchDig), 0);
-            workflows[POST_TOUCH].gotoNextStage();
             break;
         case 4:
             scheduleOnce(schedule_selector(LayerGameBasic::PostTouchGenerate), 0);
-            workflows[POST_TOUCH].gotoNextStage();
             
             break;
         case 5:
-            workflows[POST_TOUCH].gotoNextStage();
             workflows[POST_TOUCH].setActive(false);
             
             break;
             
         default: break;
     }
+    workflows[POST_TOUCH].gotoNextStage();
 }
 Vec2 LayerGameBasic::getMoverPosition(int n)
 {

@@ -27,20 +27,20 @@ struct Mover
 {
     int len;                    // the 7 regular shapes with length 4;
     int shapes[BLOCK_COMP][2];
-    int type;                   // speciality. 0-normal
+    int status;                   // speciality. 0-normal
     
-    int status[BLOCK_COMP];       // 0-default, 1-white 2-black 3-white bomb 4-black bomb
+    int block_status[BLOCK_COMP];       // 0-default, 1-white 2-black 3-white bomb 4-black bomb
     pair<int, int> positions[BLOCK_COMP];
     
     bool isActive;
 };
 class GameLogicBasic
 {
+    enum poolBlockStatus{POOL_BLOCK_EMPTY, POOL_BLOCK_BLACK, POOL_BLOCK_WHITE};
+    enum moverStatus{MOVER_STATUS_NORMAL};
+    enum moverBlockStatus{MOVER_BLOCK_NORMAL, MOVER_BLOCK_WHITE, MOVER_BLOCK_BLACK};
+
 private:
-    
-    enum poolBlockStatus{POOL_BLO_EMPTY, POOL_BLO_SETTLED};
-    enum moverStatus{MOV_STA_NORMAL};
-    enum moverBlockStatus{MOV_BLO_NORMAL, MOV_BLO_WHITE, MOV_BLO_BLACK};
     
     Pool pool;
     Mover mover;
@@ -78,6 +78,10 @@ public:
     void setPoolDepth(int depth);
     bool isRowCleared(int row);
     bool isMoverActive();
+    bool isMoverBlack(int);
+    bool isMoverWhite(int);
+    bool isPoolBlockWhite(int, int);
+    bool isPoolBlockBlack(int, int);
     
     void RemoveBlock(pair<int, int> pos);
 };

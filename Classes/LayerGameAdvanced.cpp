@@ -61,7 +61,7 @@ bool LayerGameAdvanced::init()
     
     
     // item
-    item_lightening.setCount(3);
+    item_lightening.setCount(900);
     
     
     addChild(&item_lightening, Z_ITEM_EFFECT);

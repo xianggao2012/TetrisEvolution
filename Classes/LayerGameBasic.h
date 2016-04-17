@@ -103,9 +103,11 @@ protected:
     virtual void PostWorkFlow(int workflow);
     
     
-    
     enum postWorkFlowList{POST_TOUCH = 0};
     class PostWorkFlow workflows[20];
+    
+    
+    CCTexture2D *ActiveBlack, *StayedBlack, *ActiveWhite, *StayedWhite;
 };
 
 #endif // __LAYER_GAME_BASIC_H__
