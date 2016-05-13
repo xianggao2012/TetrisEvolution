@@ -1,5 +1,6 @@
 
 #include "ItemLightening.h"
+#include "Storage.hpp"
 #include<iostream>
 using namespace std;
 
@@ -40,5 +41,19 @@ void ItemLightening::startEffect()
     
     quad->resetSystem();
     quad->setPosition(getPoolPosition());
-    
+}
+void ItemLightening::IncreaseWhitePrg(int n)
+{
+    int cur = Storage::getInstance()->getStorageStatus(LIGHTENING_WHITE_PROGRESS);
+    Storage::getInstance()->setStorageStatus(LIGHTENING_WHITE_PROGRESS, cur + 1);
+}
+void ItemLightening::IncreaseBlackPrg(int n)
+{
+    int cur = Storage::getInstance()->getStorageStatus(LIGHTENING_BLACK_PROGRESS);
+    Storage::getInstance()->setStorageStatus(LIGHTENING_BLACK_PROGRESS, cur + 1);
+}
+void ItemLightening::IncreaseCount(int n)
+{
+    int cur = Storage::getInstance()->getStorageStatus(LIGHTENING_COUNT);
+    Storage::getInstance()->setStorageStatus(LIGHTENING_COUNT, cur + 1);
 }

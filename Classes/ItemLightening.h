@@ -29,6 +29,11 @@ public:
     
     cocos2d::ParticleSystem *quad;
     void startEffect();
+    
+    
+    static void IncreaseWhitePrg(int n);
+    static void IncreaseBlackPrg(int n);
+    static void IncreaseCount(int n);
 };
 
 #endif

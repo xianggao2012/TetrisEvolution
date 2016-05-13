@@ -11,7 +11,6 @@ public:
     ItemBase();
     ~ItemBase();
     
-    int count;
     bool active;
     
     void setCount(int n);
@@ -21,6 +20,10 @@ public:
     bool isActive();
     void setActive(bool b);
     
+    // status
+    int lvlB, lvlW, count;
+    int prgB, prgW, prgCount;
+    static const int maxLvl = 10;
 };
 
 #endif

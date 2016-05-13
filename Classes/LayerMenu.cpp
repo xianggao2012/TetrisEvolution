@@ -1,6 +1,7 @@
 #include "LayerMenu.h"
 #include "LayerGameClassic.h"
 #include "LayerGameAdvanced.h"
+#include "LayerPersonal.h"
 USING_NS_CC;
 
 Scene* LayerMenu::createScene()
@@ -53,16 +54,18 @@ bool LayerMenu::init()
     // 3. add your codes below...
     //获得屏幕的大小
     auto size = Director::getInstance()->getWinSize();
-    //创建一个图片菜单项。
-    //四个参数代表：正常显示的图片，选中菜单项后显示的图片，关闭时显示的图片，菜单项的回调函数。
-    auto imageItem = MenuItemImage::create("btn-play-normal.png",
-                                           "btn-play-selected.png",
-                                           CC_CALLBACK_1(LayerMenu::imageMenuCallback, this));
-    //创建一个菜单,并设置位置
-    auto imageMenu = Menu::create(imageItem,NULL);
-    imageMenu->setPosition(Vec2(size.width/2,size.height/2));
-    //将图片菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
-    addChild(imageMenu,2);
+
+    
+//    //创建一个图片菜单项。
+//    //四个参数代表：正常显示的图片，选中菜单项后显示的图片，关闭时显示的图片，菜单项的回调函数。
+//    auto imageItem = MenuItemImage::create("btn-play-normal.png",
+//                                           "btn-play-selected.png",
+//                                           CC_CALLBACK_1(LayerMenu::imageMenuCallback, this));
+//    //创建一个菜单,并设置位置
+//    auto imageMenu = Menu::create(imageItem,NULL);
+//    imageMenu->setPosition(Vec2(size.width/2,size.height/2));
+//    //将图片菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
+//    addChild(imageMenu,2);
     
     //创建一个行文本参数代表：显示内容，字体，大小
     auto labelText = LabelTTF::create("Classic Mode", "Arial",30);
@@ -75,6 +78,18 @@ bool LayerMenu::init()
     //将文本菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
     addChild(labelMenu,2);
    
+    
+    
+    //创建一个行文本参数代表：显示内容，字体，大小
+    auto labelText1 = LabelTTF::create("Classic Mode", "Arial",30);
+    //创建一个文本项,参数代表：要显示的文本内容，目标对象，回调函数
+    auto labelItem1 = MenuItemLabel::create(labelText1,
+                                           CC_CALLBACK_1(LayerMenu::gotoLayerPersonal, this));
+    //创建一个菜单,并设置位置
+    auto labelMenu1 = Menu::create(labelItem1,NULL);
+    labelMenu1->setPosition(Vec2(size.width/2,size.height/2 - 50));
+    //将文本菜单加入到HelloWorld布景中,第二个参数表示在Z轴的层次，屏幕由里到外从小到大
+    addChild(labelMenu1,2);
     
 //
 //    // add a label shows "Hello World"
@@ -114,10 +129,16 @@ void LayerMenu::labelMenuCallback(Ref* pSender)
     Director::getInstance()->replaceScene(scene);
     
     
-//    auto scene = LayerGameClassic::createScene();
-//    Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
-//    //释放
-//    //scene->release();
+    //    auto scene = LayerGameClassic::createScene();
+    //    Director::getInstance()->replaceScene( TransitionFade::create(2, scene));
+    //    //释放
+    //    //scene->release();
+}
+
+void LayerMenu::gotoLayerPersonal(Ref* pSender)
+{
+    auto scene = LayerPersonal::createScene();
+    Director::getInstance()->replaceScene(scene);
 }
 
 void LayerMenu::menuCloseCallback(Ref* pSender)

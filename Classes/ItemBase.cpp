@@ -39,3 +39,4 @@ int ItemBase::getCount()
 {
     return count;
 }
+

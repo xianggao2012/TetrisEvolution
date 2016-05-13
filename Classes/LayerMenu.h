@@ -18,6 +18,7 @@ public:
     void imageMenuCallback(cocos2d::CCObject* pSender);
     
     void labelMenuCallback(cocos2d::CCObject* pSender);
+    void gotoLayerPersonal(cocos2d::CCObject* pSender);
     
     // implement the "static create()" method manually
     CREATE_FUNC(LayerMenu);

@@ -46,4 +46,18 @@
 
 // z axis
 #define Z_ITEM_EFFECT 5
- 
+
+// Personal
+#define LIGHTENING_WHITE_LEVEL "lighteningWhiteLvl"
+#define LIGHTENING_WHITE_PROGRESS "lighteningWhitePrg"
+#define LIGHTENING_BLACK_LEVEL "lighteningBlackLvl"
+#define LIGHTENING_BLACK_PROGRESS "lighteningBlackPrg"
+#define LIGHTENING_COUNT "lighteningCount"
+
+#define FORKLIGHTENING_WHITE_LEVEL "forklighteningWhiteLvl"
+#define FORKLIGHTENING_WHITE_PROGRESS "forklighteningWhitePrg"
+#define FORKLIGHTENING_BLACK_LEVEL "forklighteningBlackLvl"
+#define FORKLIGHTENING_BLACK_PROGRESS "forklighteningBlackPrg"
+
+#define WHITE_GEAR "whiteGear"
+#define BLACK_GEAR "blackGear"

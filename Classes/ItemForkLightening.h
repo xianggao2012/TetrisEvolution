@@ -21,6 +21,10 @@ public:
     
     void setPoolPosition(cocos2d::Vec2 pos);
     cocos2d::Vec2 getPoolPosition();
+    
+    
+    static void IncreaseWhitePrg(int n);
+    static void IncreaseBlackPrg(int n);
 };
 
 #endif

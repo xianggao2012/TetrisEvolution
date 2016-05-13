@@ -1,8 +1,8 @@
 #include "ConfigFactory.h"
 #include "cocos-ext.h"
 #include "tinyxml2/tinyxml2.h"
+#include <stdlib.h>
 using namespace tinyxml2;
-
 
 USING_NS_CC;
 
@@ -31,7 +31,6 @@ ConfigFactory* ConfigFactory::getInstance()
 
 unordered_map<string, unordered_map<string, string>> ConfigFactory::LoadLayer(string layername)
 {
-    std::cout<<"layername:"<<layername<<endl;
     unordered_map<string, unordered_map<string, string>> map_config;
     unordered_map<string, string> map_attri;
     string str_attri;
@@ -101,7 +100,6 @@ bool ConfigFactory::LoadScene()
 //            }
         }
         Element = Element->NextSiblingElement();
-
     }
 
     return true;

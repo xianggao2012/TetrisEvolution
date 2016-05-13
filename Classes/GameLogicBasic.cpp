@@ -383,7 +383,6 @@ bool GameLogicBasic::isMoverBlack(int i)
     return mover.block_status[i] == MOVER_BLOCK_BLACK;
 }
 
-
 bool GameLogicBasic::isMoverWhite(int i)
 {
     return mover.block_status[i] == MOVER_BLOCK_WHITE;
